@@ -9,15 +9,15 @@ class App < Sinatra::Base
     slim :index
   end
 
-  get '/design' do
-    slim :design
+  get '/apidesign' do
+    slim :apidesign
   end
 
   get '/bible' do
     slim :bible
   end
 
-  get '/bible/:query' do
+  get '/api/bible/:query' do
     "bible, #{params[:query]}"
   end
 
@@ -25,7 +25,7 @@ class App < Sinatra::Base
     slim :quran
   end
 
-  get '/quran/:query' do
+  get '/api/quran/:query' do
     "quran, #{params[:query]}"
   end
 

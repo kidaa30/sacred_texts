@@ -1,7 +1,48 @@
 doctype html
 html
   head
-    title The Quran 
+    title Sacred Text
+    == bootstrap_assets
 
 body
-  h1 Quran Test
+  == slim :navbar
+
+  .container
+    h1 Quran API
+
+    p The text of the Quran is divided into Suwar (singular Sura) and Ayat
+      (singular Aya). A Sura can be considered as a chapter, which contains
+      multiple Ayat.  An Aya is roughtly a phrase or a sentence.
+
+    P Each Sura has a name, but the convention seems to be to use the number of
+      the Sura, and not the name.
+      <pre>
+      {
+        "name": "Quran passage",
+        "properties": {
+          "sura": {
+            "type": "number",
+            "description": "Chapter",
+            "required": true
+          },
+          "aya": {
+            "type": "number",
+            "description: "sentence",
+            "required": true
+          },
+            "text": {
+            "type": "string",
+            "description: "passage text",
+            "required": true
+          }
+        }
+      }
+      </pre>
+      For example:
+      <pre>
+      {
+        "sura": 1,
+        "aya": 1,
+        "text" : "In the name of Allah , the Entirely Merciful, the Especially Merciful."
+      }
+      </pre>
