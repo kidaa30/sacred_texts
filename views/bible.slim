@@ -4,51 +4,24 @@ html
     title Sacred Text
     == bootstrap_assets
 
-body
-  == slim :navbar
+  body style="padding-top: 60px;"
+    == slim :navbar
 
-  .container
-    h1 Bible API
+    .container
+      h1 Bible API
 
-    p This site uses the American Standard Version of 1901.
+      p This site uses the American Standard Version of 1901.
 
-    p The API for accessing Bible passages tried to keep close to that of the
-      <a href="http://labs.bible.org/api_web_service">NET Bible Web Service.</a>
-    p An individual Bible verse is identified uniquely by the verse number,
-      chapter number, and book. 
-      <pre>
-      {
-        "name": "Bible Verse",
-        "properties": {
-          "bookname": {
-            "type": "string",
-            "description": "Book of the Bible",
-            "required": true
-          },
-          "chapter": {
-            "type": "number",
-            "description": "Chapter in the book",
-            "required": true
-          },
-          "verse": {
-            "type": "number",
-            "description: "Verse in the chapter",
-            "required": true
-          },
-            "text": {
-            "type": "string",
-            "description: "Verse text",
-            "required": true
-          }
+      p The API for accessing Bible passages tried to keep close to that of the
+        <a href="http://labs.bible.org/api_web_service">NET Bible Web Service.</a>
+      p An individual Bible verse is identified uniquely by the verse number,
+        chapter number, and book. 
+        For example:
+        <pre>
+        {
+          "bookname": "Genesis",
+          "chapter": 1,
+          "verse": 1,
+          "text" : "In the beginning, God created the heavens and the earth."
         }
-      }
-      </pre>
-      For example:
-      <pre>
-      {
-        "bookname": "Genesis",
-        "chapter": 1,
-        "verse": 1,
-        "text" : "In the beginning, God created the heavens and the earth."
-      }
-      </pre>
+        </pre>
