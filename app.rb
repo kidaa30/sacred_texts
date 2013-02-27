@@ -30,16 +30,12 @@ class App < Sinatra::Base
     slim :bible
   end
 
-  get '/api/bible/:query' do
-    "bible, #{params[:query]}"
+  get '/api/v1/bible/:bookname/:chapter/:verse' do
+    settings.mongo_db['bible'].find({bookname: params[:bookname], chapter: params[:chapter], verse: params[:verse]})
   end
 
   get '/quran' do
     slim :quran
-  end
-
-  get '/api/quran/:query' do
-    "quran, #{params[:query]}"
   end
 
   get '/collections' do
