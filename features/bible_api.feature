@@ -8,6 +8,6 @@ Feature: Bible API
 				"bookname":"Genesis",
 				"chapter":1,
 				"verse":1,
-				"text":	"In the beginning God created the heavens and earth."
+				"text":	"In the beginning God created the heavens and the earth."
 			}
 			"""

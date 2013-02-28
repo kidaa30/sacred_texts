@@ -2,6 +2,7 @@ require 'slim'
 require 'sinatra/base'
 require 'sinatra/twitter-bootstrap'
 require 'mongo'
+require 'json'
 
 class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
@@ -31,7 +32,11 @@ class App < Sinatra::Base
   end
 
   get '/api/v1/bible/:bookname/:chapter/:verse' do
-    settings.mongo_db['bible'].find({bookname: params[:bookname], chapter: params[:chapter], verse: params[:verse]})
+    content_type :json
+    settings.mongo_db['bible'].find_one({bookname: params[:bookname],
+                                         chapter: params[:chapter].to_i,
+                                         verse: params[:verse].to_i},
+                                         {fields: {_id: 0}}).to_json
   end
 
   get '/quran' do
