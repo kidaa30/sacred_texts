@@ -31,12 +31,18 @@ class App < Sinatra::Base
     slim :bible
   end
 
-  get '/api/v1/bible/:bookname/:chapter/:verse' do
+  get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
     content_type :json
-    settings.mongo_db['bible'].find_one({bookname: params[:bookname],
-                                         chapter: params[:chapter].to_i,
-                                         verse: params[:verse].to_i},
-                                         {fields: {_id: 0}}).to_json
+    settings.mongo_db['bible'].find_one(
+      {
+        bookname: book,
+        chapter: chapter.to_i,
+        verse: verse.to_i
+      },
+      {
+        fields: {_id: 0}
+      }
+    ).to_json
   end
 
   get '/quran' do
