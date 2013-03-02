@@ -46,6 +46,7 @@ class App < Sinatra::Base
 
     if verse.nil?
       status 404
+      {"error" => "No results found."}.to_json
     else
       verse.to_json
     end
