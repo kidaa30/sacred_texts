@@ -221,3 +221,7 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+Then /^the http response status code should be (.+)$/ do |code|
+  page.status_code.should == code.to_i
+end

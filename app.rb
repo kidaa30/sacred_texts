@@ -33,7 +33,7 @@ class App < Sinatra::Base
 
   get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
     content_type :json
-    settings.mongo_db['bible'].find_one(
+    verse = settings.mongo_db['bible'].find_one(
       {
         bookname: book,
         chapter: chapter.to_i,
@@ -42,7 +42,13 @@ class App < Sinatra::Base
       {
         fields: {_id: 0}
       }
-    ).to_json
+    )
+
+    if verse.nil?
+      status 404
+    else
+      verse.to_json
+    end
   end
 
   get '/quran' do
