@@ -42,3 +42,21 @@ Feature: Bible API
 		"error":"No results found."
 		}
 		"""
+
+  Scenario: complex lookup can have passage param
+    When I visit "/api/v1/bible/?passage=Genesis 1:1"
+    Then the http response status code should be 200
+
+  Scenario: complex lookup can have search param
+    When I visit "/api/v1/bible/?search=Job"
+    Then the http response status code should be 200
+
+  Scenario: Complex lookuo cannot have both passage and search params at the same time
+    When I visit "/api/v1/bible/?passage=Genesis 1:1&search=Job"
+    Then the http response status code should be 400
+    And the JSON should be:
+    """
+    {
+    "error":"Only one of the parameters 'passage' and 'search' can be specified."
+    }
+    """

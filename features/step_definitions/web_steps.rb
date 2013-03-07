@@ -21,7 +21,7 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
 end
 
 When /^I visit "(.+)"$/ do |path|
-  visit path
+  visit URI.escape(path)
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|

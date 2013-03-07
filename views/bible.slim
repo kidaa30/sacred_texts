@@ -25,3 +25,23 @@ html
           "text" : "In the beginning, God created the heavens and the earth."
         }
         </pre>
+
+      h2  Keyword search
+
+      p Returns a json object containing an array element named "results".
+
+      h2  Passages
+
+      p Returns a json object contain an array element named "passage".
+
+      h2  Individual texts
+
+      p Use the RESTful path
+        <pre>
+        /bookname/chapter/verse
+        </pre>
+        to retrieve a single verse.  For example:
+
+      ul
+        li
+          a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1

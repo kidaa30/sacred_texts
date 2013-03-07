@@ -19,6 +19,7 @@ class App < Sinatra::Base
     set :mongo_db, db
   end
 
+  # static pages
   get '/' do
     slim :index
   end
@@ -31,6 +32,15 @@ class App < Sinatra::Base
     slim :bible
   end
 
+  get '/quran' do
+    slim :quran
+  end
+
+  get '/collections' do
+    settings.mongo_db.collection_names
+  end
+
+  # "simple" lookups
   get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
     content_type :json
     verse = settings.mongo_db['bible'].find_one(
@@ -52,12 +62,34 @@ class App < Sinatra::Base
     end
   end
 
-  get '/quran' do
-    slim :quran
-  end
+  # "complex" lookups
+  get '/api/v1/bible/' do
+    content_type :json
+    passage = params['passage']
+    search = params['search']
+    type = params['type']
 
-  get '/collections' do
-    settings.mongo_db.collection_names
+    # cannot be both a passage and a lookup
+    if (!passage.nil? && !search.nil?)
+      status 400
+      {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
+    elsif (passage.nil? && !search.nil?)
+      # keyword search
+      verses = settings.mongo_db['bible'].find(
+        {
+          text: /#{search}/
+        },
+        {
+          fields: {_id: 0}
+        }
+      )
+      {
+        "results" => verses.to_a
+      }.to_json
+    else
+      # passage
+      {"passage" => "todo"}.to_json
+    end
   end
 
 end
