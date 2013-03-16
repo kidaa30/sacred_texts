@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gem "sinatra", :require => "sinatra/base"
 gem "slim"
 gem 'sinatra-twitter-bootstrap'
-gem 'mongo'
-gem 'bson_ext'
+gem 'mongo_mapper'
+gem 'bson_ext', '1.8.2'
 
 # for testing
 group :development, :test do

@@ -1,22 +1,17 @@
 require 'slim'
 require 'sinatra/base'
 require 'sinatra/twitter-bootstrap'
-require 'mongo'
+require 'mongo_mapper'
 require 'json'
+
+# load the models
+Dir["./app/models/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
 
   configure do
-    host = ENV['MONGO_HOST']
-    port = ENV['MONGO_PORT']
-    inst = ENV['MONGO_DB']
-    user = ENV['MONGO_USER']
-    pass = ENV['MONGO_PASS']
-
-    db = Mongo::Connection.new(host, port).db(inst)
-    db.authenticate(user, pass)
-    set :mongo_db, db
+    MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
   end
 
   # static pages
@@ -36,29 +31,32 @@ class App < Sinatra::Base
     slim :quran
   end
 
-  get '/collections' do
-    settings.mongo_db.collection_names
-  end
-
   # "simple" lookups
   get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
     content_type :json
-    verse = settings.mongo_db['bible'].find_one(
-      {
-        bookname: book,
-        chapter: chapter.to_i,
-        verse: verse.to_i
-      },
-      {
-        fields: {_id: 0}
-      }
-    )
 
-    if verse.nil?
+    result = Bible.where(:bookname => book,
+                         :chapter => chapter.to_i,
+                         :verse => verse.to_i).first
+
+    if result.nil?
       status 404
       {"error" => "No results found."}.to_json
     else
-      verse.to_json
+      result.to_json
+    end
+  end
+
+  get %r{/api/v1/quran/([\d]+)/([\d]+)} do |sura, aya|
+    content_type :json
+
+    result = Quran.find_by_sura_and_aya(sura.to_i, aya.to_i)
+
+    if result.nil?
+      status 404
+      {"error" => "No results found."}.to_json
+    else
+      result.to_json
     end
   end
 
@@ -75,14 +73,15 @@ class App < Sinatra::Base
       {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
     elsif (passage.nil? && !search.nil?)
       # keyword search
-      verses = settings.mongo_db['bible'].find(
-        {
-          text: /#{search}/
-        },
-        {
-          fields: {_id: 0}
-        }
-      )
+      #verses = settings.mongo_db['bible'].find(
+      #  {
+      #    text: /#{search}/
+      #  },
+      #  {
+      #    fields: {_id: 0}
+      #  }
+      #)
+      verses = nil;
       {
         "results" => verses.to_a
       }.to_json
