@@ -60,3 +60,50 @@ Feature: Bible API
     "error":"Only one of the parameters 'passage' and 'search' can be specified."
     }
     """
+
+  Scenario: full search, single keyword, multiple results
+    When I visit "/api/v1/bible/?search=Ulai"
+    Then the JSON should be:
+    """
+    {
+    "results":[
+                {
+                  "bookname":"Daniel",
+                  "chapter":8,
+                  "text":"And I saw in the vision; now it was so, that when I saw, I was in Shushan the palace, which is in the province of Elam; and I saw in the vision, and I was by the river Ulai.",
+                  "verse":2
+                },
+                {
+                  "bookname":"Daniel",
+                  "chapter":8,
+                  "text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
+                  "verse":16
+                }
+              ]
+    }
+    """
+
+  Scenario: full search, multiple keywords
+    When I visit "/api/v1/bible/?search=ulai+Gabriel"
+    Then the JSON should be:
+    """
+    {
+    "results":[
+                {
+                  "bookname":"Daniel",
+                  "chapter":8,
+                  "text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
+                  "verse":16
+                }
+              ]
+    }
+    """
+
+  Scenario: full search, no results
+    When I visit "/api/v1/bible/?search=blarg"
+    Then the JSON should be:
+    """
+    {
+      "results":[]
+    }
+    """

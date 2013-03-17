@@ -31,14 +31,13 @@ class App < Sinatra::Base
     slim :quran
   end
 
-  # "simple" lookups
+  # Single verse
   get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
     content_type :json
 
-    result = Bible.where(:bookname => book,
-                         :chapter => chapter.to_i,
-                         :verse => verse.to_i).first
-
+    result = Bible.find_by_bookname_and_chapter_and_verse(book,
+                                                          chapter.to_i,
+                                                          verse.to_i)
     if result.nil?
       status 404
       {"error" => "No results found."}.to_json
@@ -60,30 +59,21 @@ class App < Sinatra::Base
     end
   end
 
-  # "complex" lookups
+  # Base url for complete search, passage lookup
   get '/api/v1/bible/' do
     content_type :json
     passage = params['passage']
     search = params['search']
     type = params['type']
 
-    # cannot be both a passage and a lookup
+    # cannot be both a passage and a search
     if (!passage.nil? && !search.nil?)
       status 400
       {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
     elsif (passage.nil? && !search.nil?)
-      # keyword search
-      #verses = settings.mongo_db['bible'].find(
-      #  {
-      #    text: /#{search}/
-      #  },
-      #  {
-      #    fields: {_id: 0}
-      #  }
-      #)
-      verses = nil;
+      result = Bible.where(:text => {:$regex => "#{search}", :$options => 'i'})
       {
-        "results" => verses.to_a
+        "results" => result.to_a
       }.to_json
     else
       # passage
