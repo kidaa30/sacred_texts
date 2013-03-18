@@ -4,11 +4,14 @@ require 'sinatra/twitter-bootstrap'
 require 'mongo_mapper'
 require 'json'
 
-# load the models
+# load the models and helpers
 Dir["./app/models/*.rb"].each { |file| require file }
+Dir["./app/helpers/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
+
+  helpers Sinatra::KeywordParser
 
   configure do
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
@@ -71,7 +74,8 @@ class App < Sinatra::Base
       status 400
       {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
     elsif (passage.nil? && !search.nil?)
-      result = Bible.where(:text => {:$regex => "#{search}", :$options => 'i'})
+      #result = Bible.where(:text => {:$regex => "#{search}", :$options => 'i'})
+      result = Bible.where(keyword_clause(search))
       {
         "results" => result.to_a
       }.to_json
