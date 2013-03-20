@@ -74,11 +74,8 @@ class App < Sinatra::Base
       status 400
       {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
     elsif (passage.nil? && !search.nil?)
-      #result = Bible.where(:text => {:$regex => "#{search}", :$options => 'i'})
-      result = Bible.where(keyword_clause(search))
-      {
-        "results" => result.to_a
-      }.to_json
+      result = Bible.all(:$and => keyword_where_clause(search))
+      {"results" => result.to_a}.to_json
     else
       # passage
       {"passage" => "todo"}.to_json
