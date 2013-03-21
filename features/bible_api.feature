@@ -107,3 +107,26 @@ Feature: Bible API
       "results":[]
     }
     """
+
+  Scenario: scoped search, per chapter
+    When I visit "/api/v1/bible/Genesis/3/?search=Adam"
+		Then the http response status code should be 200
+    And the JSON should be:
+    """
+    {
+    "results":[
+                {
+                  "bookname":"Genesis",
+                  "chapter":3,
+                  "text":"And unto Adam he said, Because thou hast hearkened unto the voice of thy wife, and hast eaten of the tree, of which I commanded thee, saying, Thou shalt not eat of it: cursed is the ground for thy sake; in toil shalt thou eat of it all the days of thy life;",
+                  "verse":17
+                },
+                {
+                  "bookname":"Genesis",
+                  "chapter":3,
+                  "text":"And Jehovah God made for Adam and for his wife coats of skins, and clothed them.",
+                  "verse":21
+                }
+              ]
+    }
+    """

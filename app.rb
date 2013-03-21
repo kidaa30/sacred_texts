@@ -45,7 +45,7 @@ class App < Sinatra::Base
       status 404
       {"error" => "No results found."}.to_json
     else
-      result.to_json
+      result.to_json(except: :id)
     end
   end
 
@@ -58,7 +58,7 @@ class App < Sinatra::Base
       status 404
       {"error" => "No results found."}.to_json
     else
-      result.to_json
+      result.to_json(except: :id)
     end
   end
 
@@ -75,10 +75,24 @@ class App < Sinatra::Base
       {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
     elsif (passage.nil? && !search.nil?)
       result = Bible.all(:$and => keyword_where_clause(search))
-      {"results" => result.to_a}.to_json
+      {"results" => result.to_a}.to_json(except: :id)
     else
       # passage
       {"passage" => "todo"}.to_json
+    end
+  end
+
+  # bible search, per chapter
+  get %r{/api/v1/bible/([\w]+)/([\d]+)} do |book, chapter|
+    content_type :json
+    search = params['search']
+
+    if !search.nil?
+      clause = keyword_where_clause(search)
+      clause.push({:bookname => book})
+      clause.push({:chapter => chapter.to_i})
+      result = Bible.all(:$and => clause)
+      {"results" => result.to_a}.to_json(except: :id)
     end
   end
 
