@@ -5,4 +5,8 @@ class Quran
   key :sura, Integer
   key :aya, Integer
   key :text, String
+
+  def serializable_hash(options = {})
+    super({:except => :id}.merge(options))
+  end
 end
