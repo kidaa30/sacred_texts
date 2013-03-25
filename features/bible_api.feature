@@ -13,6 +13,31 @@ Feature: Bible API
 		}
 		"""
 
+	Scenario: Lookup a valid text, json content type
+		When I visit "/api/v1/bible/Genesis/1/1.json"
+		Then the http response status code should be 200
+		And the JSON should be:
+		"""
+		{
+		"bookname":"Genesis",
+		"chapter":1,
+		"verse":1,
+		"text":	"In the beginning God created the heavens and the earth."
+		}
+		"""
+
+	Scenario: Lookup a valid text, xml content type
+		When I visit "/api/v1/bible/Genesis/1/1.xml"
+		Then the http response status code should be 200
+		And the XML should be:
+		"""
+    <?xml version="1.0" encoding="UTF-8"?>
+    <bookname>Genesis</bookname>
+    <chapter>1</chapter>
+    <verse>1</verse>
+    <text>In the beginning God created the heavens and the earth.</text>
+    """
+
 	Scenario: Lookup with an invalid bookname
 		When I visit "/api/v1/bible/blarg/1/1"
 		Then the http response status code should be 404

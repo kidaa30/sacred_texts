@@ -12,6 +12,7 @@ class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
 
   helpers Sinatra::KeywordParser
+  helpers Sinatra::ContentTypes
 
   configure do
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
@@ -35,17 +36,16 @@ class App < Sinatra::Base
   end
 
   # Single verse
-  get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)} do |book, chapter, verse|
-    content_type :json
+  get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
 
     result = Bible.find_by_bookname_and_chapter_and_verse(book,
                                                           chapter.to_i,
                                                           verse.to_i)
     if result.nil?
       status 404
-      {"error" => "No results found."}.to_json
+      format({"error" => "No results found."}, type)
     else
-      result.to_json
+      format(result, type)
     end
   end
 

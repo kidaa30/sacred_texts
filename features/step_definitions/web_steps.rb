@@ -225,3 +225,9 @@ end
 Then /^the http response status code should be (.+)$/ do |code|
   page.status_code.should == code.to_i
 end
+
+Then /^the XML should be:$/ do |xml_output|
+  response = Hash.from_xml(page.body)
+  expected = Hash.from_xml(xml_output)
+  expected.diff(response).should == {}
+end
