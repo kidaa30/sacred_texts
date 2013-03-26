@@ -10,4 +10,5 @@ gem 'bson_ext', '1.8.2'
 group :development, :test do
   gem 'cucumber-sinatra'
   gem 'json_spec'
+  gem 'equivalent-xml'
 end

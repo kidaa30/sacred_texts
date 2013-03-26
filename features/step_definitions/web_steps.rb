@@ -7,6 +7,7 @@
 
 require 'uri'
 require 'cgi'
+require 'equivalent-xml'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
 
 module WithinHelpers
@@ -227,7 +228,6 @@ Then /^the http response status code should be (.+)$/ do |code|
 end
 
 Then /^the XML should be:$/ do |xml_output|
-  response = Hash.from_xml(page.body)
-  expected = Hash.from_xml(xml_output)
-  expected.diff(response).should == {}
+  response = page.body
+  EquivalentXml.equivalent?(response, xml_output)
 end

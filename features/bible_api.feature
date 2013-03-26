@@ -32,10 +32,12 @@ Feature: Bible API
 		And the XML should be:
 		"""
     <?xml version="1.0" encoding="UTF-8"?>
-    <bookname>Genesis</bookname>
-    <chapter>1</chapter>
-    <verse>1</verse>
-    <text>In the beginning God created the heavens and the earth.</text>
+    <bible>
+      <bookname>Genesis</bookname>
+      <chapter>1</chapter>
+      <verse>1</verse>
+      <text>In the beginning God created the heavens and the earth.</text>
+    </bible>
     """
 
 	Scenario: Lookup with an invalid bookname

@@ -1,4 +1,3 @@
-
 class Bible
   include MongoMapper::Document
   set_collection_name 'Bible'
