@@ -5,7 +5,11 @@ module Sinatra
 
     def format(data, type)
       if !type.nil?
-        type = type[1..-1]
+        # strip off leading "." when it exists.
+        # This is not needed when type is passed as a param.
+        if type.starts_with?(".")
+          type = type[1..-1]
+        end
       end
 
       content_type CONTENT_TYPES[type], charset: 'utf-8'

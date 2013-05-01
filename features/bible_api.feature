@@ -3,6 +3,7 @@ Feature: Bible API
 	Scenario: Lookup a valid text
 		When I visit "/api/v1/bible/Genesis/1/1"
 		Then the http response status code should be 200
+    And the content_type should be json
 		And the JSON should be:
 		"""
 		{
@@ -16,6 +17,7 @@ Feature: Bible API
 	Scenario: Lookup a valid text, json content type
 		When I visit "/api/v1/bible/Genesis/1/1.json"
 		Then the http response status code should be 200
+    And the content_type should be json
 		And the JSON should be:
 		"""
 		{
@@ -90,7 +92,8 @@ Feature: Bible API
 
   Scenario: full search, single keyword, multiple results
     When I visit "/api/v1/bible/?search=Ulai"
-    Then the JSON should be:
+    Then the content_type should be json
+    And the JSON should be:
     """
     {
     "results":[
@@ -112,6 +115,7 @@ Feature: Bible API
 
   Scenario: full search, multiple keywords
     When I visit "/api/v1/bible/?search=ulai+Gabriel"
+    Then the content_type should be json
     Then the JSON should be:
     """
     {
@@ -137,7 +141,8 @@ Feature: Bible API
 
   Scenario: scoped search, per chapter
     When I visit "/api/v1/bible/Genesis/3/?search=Adam"
-		Then the http response status code should be 200
+    Then the http response status code should be 200
+    Then the content_type should be json
     And the JSON should be:
     """
     {
@@ -156,4 +161,39 @@ Feature: Bible API
                 }
               ]
     }
+    """
+
+  Scenario: full search, type json
+    When I visit "/api/v1/bible/?search=ulai+Gabrieli&type=json"
+    Then the content_type should be json
+    And the JSON should be:
+
+    """
+    {
+    "results":[
+                {
+                  "bookname":"Daniel",
+                  "chapter":8,
+                  "text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
+                  "verse":16
+                }
+              ]
+    }
+    """
+
+  Scenario: full search, type xml
+    When I visit "/api/v1/bible/?search=ulai+Gabrieli&type=xml"
+    Then the XML should be:
+    """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <hash>
+      <results>
+        <result>
+          <bookname>Daniel</bookname>
+          <chapter>8</chapter>
+          <verse>16</verse>
+          <text>And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision</text>
+        </result>
+      </results>
+    </hash>
     """

@@ -21,7 +21,6 @@ class App < Sinatra::Base
 
   # Base url for complete search, passage lookup
   get '/api/v1/bible/' do
-    content_type :json
     passage = params['passage']
     search = params['search']
     type = params['type']
@@ -29,10 +28,11 @@ class App < Sinatra::Base
     # cannot be both a passage and a search
     if (!passage.nil? && !search.nil?)
       status 400
-      {"error" => "Only one of the parameters 'passage' and 'search' can be specified."}.to_json
+      format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
     elsif (passage.nil? && !search.nil?)
       result = Bible.all(:$and => keyword_where_clause(search))
-      {"results" => result.to_a}.to_json
+      data = {"results" => result.to_a}
+      format(data, type)
     else
       # passage
       {"passage" => "todo"}.to_json

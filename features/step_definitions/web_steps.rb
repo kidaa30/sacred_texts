@@ -227,7 +227,20 @@ Then /^the http response status code should be (.+)$/ do |code|
   page.status_code.should == code.to_i
 end
 
+Then /^the content_type should be "(.+)"$/ do |type|
+  page.response_headers['Content-Type'].should == type
+end
+
+Then /^the content_type should be json$/ do
+  steps %Q{
+    Then the content_type should be "application/json;charset=utf-8"
+  }
+end
+
 Then /^the XML should be:$/ do |xml_output|
+  steps %Q{
+    Then the content_type should be "application/xml;charset=utf-8"
+  }
   response = page.body
-  EquivalentXml.equivalent?(response, xml_output)
+  EquivalentXml.equivalent?(response, xml_output).should == true
 end
