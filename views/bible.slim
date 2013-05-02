@@ -10,10 +10,12 @@ html
     .container
       h1 Bible API
 
+      h2 Version
+
       p This site uses the American Standard Version of 1901.
 
-      p The API for accessing Bible passages tried to keep close to that of the
-        <a href="http://labs.bible.org/api_web_service">NET Bible Web Service.</a>
+      h2 Conventions
+
       p An individual Bible verse is identified uniquely by the verse number,
         chapter number, and book. 
         For example:
@@ -26,22 +28,52 @@ html
         }
         </pre>
 
-      h2  Keyword search
-
-      p Returns a json object containing an array element named "results".
-
-      h2  Passages
-
-      p Returns a json object contain an array element named "passage".
+      p A group of Bible verses is returned in a JSON array named "results".
+        For example:
+        <pre>
+        {
+          "results":
+          [
+            {
+              "bookname": "Genesis",
+              "chapter": 1,
+              "verse": 1,
+              "text" : "In the beginning, God created the heavens and the earth."
+            },
+            {
+              "bookname": "Genesis",
+              "chapter": 1,
+              "verse": 2,
+              "text" : "And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters"
+            }
+          ]
+        }
+        </pre>
 
       h2  Individual texts
 
-      p Use the RESTful path
-        <pre>
-        /bookname/chapter/verse
-        </pre>
-        to retrieve a single verse.  For example:
+      p Use the RESTful path <code>/bookname/chapter/verse</code> to retrieve a single verse.  For example:
 
       ul
         li
           a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
+
+      h2  Searching
+
+      p Perform keyword searches using the <code>search</code> parameter.  Only
+      verses matching... 
+
+      p The Bible API supports three scoped levels of searching:
+      ul
+        li Full Bible search: <a href="/api/v1/bible?search=Adam">?search=Adam</a>
+        li Search within a book: <a href="/api/v1/bible/Genesis?search=Adam">&#47;Genesis?search=Adam</a>
+        li Search within a book and chapter: <a href="/api/v1/bible/Genesis/3?search=Adam">&#47;Genesis&#47;3?search=Adam</a>
+
+      p Multiple keywords must be separated by "+".  For example:
+      ul
+        li
+          a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
+
+      h2  Passages
+
+      p Returns a json object contain an array element named "passage".

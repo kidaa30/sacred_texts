@@ -20,9 +20,10 @@ class App < Sinatra::Base
   end
 
   # Base url for complete search, passage lookup
-  get '/api/v1/bible/' do
+  get '/api/v1/bible' do
     passage = params['passage']
     search = params['search']
+    mode = params['mode']
     type = params['type']
 
     # cannot be both a passage and a search
@@ -43,6 +44,7 @@ class App < Sinatra::Base
   get %r{/api/v1/bible/([\w]+)/([\d]+)} do |book, chapter|
     content_type :json
     search = params['search']
+    mode = params['mode']
 
     if !search.nil?
       clause = keyword_where_clause(search)
@@ -57,6 +59,7 @@ class App < Sinatra::Base
   get %r{/api/v1/bible/([\w]+)} do |book|
     content_type :json
     search = params['search']
+    mode = params['mode']
 
     if !search.nil?
       clause = keyword_where_clause(search)
