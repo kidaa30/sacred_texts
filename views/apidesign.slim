@@ -60,19 +60,19 @@ html
 
       p Global search url:
         <pre>
-          /bible/search?q=keyword1+keyword2
+          /bible?search=keyword1+keyword2
         </pre>
 
       p Scoped search url:
         <pre>
-          /bible/John/3/search?q=keyword1
+          /bible/John/3?search=keyword1
         </pre>
         Scoped searches do not make sense at the lowest detail level (verses for
         the Bible searches).
 
       p Formatted search url:
         <pre>
-          /bible/John/3/search.json?q=keyword1
+          /bible/John/3?search=keyword1&type=json
         </pre>
 
       p The url will be api.sacredtexts.etc...
@@ -80,7 +80,7 @@ html
       p Add support for suppressing non-200 HTTP response codes, even when
         response is not "ok".
         <pre>
-          /bible/search.json?suppress_response_codes=true&q=Moses
+          /bible?search=Moses&suppress_response_codes=true
         </pre>
         Then the "real" 401 HTTP response code would be pushed into the response 
         message.

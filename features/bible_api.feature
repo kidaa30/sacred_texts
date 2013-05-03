@@ -163,22 +163,56 @@ Feature: Bible API
 		}
 		"""
 
+	Scenario: Chapter search, multiple keywords
+		When I visit "/api/v1/bible/Daniel/8?search=ulai+Gabriel"
+		Then the content_type should be json
+		Then the JSON should be:
+		"""
+		{
+		"results":[
+		{
+		"bookname":"Daniel",
+		"chapter":8,
+		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
+		"verse":16
+		}
+		]
+		}
+		"""
+
 	Scenario: Book search
 		When I visit "/api/v1/bible/Genesis?search=wounding"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
-    {
-    "results":[
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"And Lamech said unto his wives: Adah and Zillah, hear my voice; Ye wives of Lamech, hearken unto my speech: For I have slain a man for wounding me, And a young man for bruising me:",
-    "verse":23
-    }
-    ]
-    }
+		{
+		"results":[
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And Lamech said unto his wives: Adah and Zillah, hear my voice; Ye wives of Lamech, hearken unto my speech: For I have slain a man for wounding me, And a young man for bruising me:",
+		"verse":23
+		}
+		]
+		}
+		"""
+
+	Scenario: Book search, multiple keywords
+		When I visit "/api/v1/bible/Daniel?search=ulai+Gabriel"
+		Then the content_type should be json
+		Then the JSON should be:
+		"""
+		{
+		"results":[
+		{
+		"bookname":"Daniel",
+		"chapter":8,
+		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
+		"verse":16
+		}
+		]
+		}
 		"""
 
 	Scenario: Full search, type json
@@ -216,54 +250,107 @@ Feature: Bible API
 		"""
 
 	Scenario: Exact search mode, per book
-    When I visit "/api/v1/bible/Genesis?search=Eve+Cain&mode=exact"
+		When I visit "/api/v1/bible/Genesis?search=Eve+Cain&mode=exact"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
-    {
-    "results":[
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
-    "verse":1
-    }
-    ]
-    }
+		{
+		"results":[
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
+		"verse":1
+		}
+		]
+		}
 		"""
 
 	Scenario: Regular search mode, per book
-    When I visit "/api/v1/bible/Genesis?search=Eve+Cain"
+		When I visit "/api/v1/bible/Genesis?search=Eve+Cain"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
-    {
-    "results":[
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
-    "verse":1
-    },
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"And Jehovah said unto him, Therefore whosoever slayeth Cain, vengeance shall be taken on him sevenfold. And Jehovah appointed a sign for Cain, lest any finding him should smite him.",
-    "verse":15
-    },
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"And Zillah, she also bare Tubal-cain, the forger of every cutting instrument of brass and iron: and the sister of Tubal-cain was Naamah.",
-    "verse":22
-    },
-    {
-    "bookname":"Genesis",
-    "chapter":4,
-    "text":"If Cain shall be avenged sevenfold, Truly Lamech seventy and sevenfold.","verse":24
-    }
-    ]
-    }
+		{
+		"results":[
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
+		"verse":1
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And Jehovah said unto him, Therefore whosoever slayeth Cain, vengeance shall be taken on him sevenfold. And Jehovah appointed a sign for Cain, lest any finding him should smite him.",
+		"verse":15
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And Zillah, she also bare Tubal-cain, the forger of every cutting instrument of brass and iron: and the sister of Tubal-cain was Naamah.",
+		"verse":22
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"If Cain shall be avenged sevenfold, Truly Lamech seventy and sevenfold.","verse":24
+		}
+		]
+		}
+		"""
+
+	Scenario: Exact search mode, per chapter
+		When I visit "/api/v1/bible/Genesis/4?search=Eve+Cain&mode=exact"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON should be:
+		"""
+		{
+		"results":[
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
+		"verse":1
+		}
+		]
+		}
+		"""
+
+	Scenario: Regular search mode, per chapter
+		When I visit "/api/v1/bible/Genesis/4?search=Eve+Cain"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON should be:
+		"""
+		{
+		"results":[
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
+		"verse":1
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And Jehovah said unto him, Therefore whosoever slayeth Cain, vengeance shall be taken on him sevenfold. And Jehovah appointed a sign for Cain, lest any finding him should smite him.",
+		"verse":15
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"And Zillah, she also bare Tubal-cain, the forger of every cutting instrument of brass and iron: and the sister of Tubal-cain was Naamah.",
+		"verse":22
+		},
+		{
+		"bookname":"Genesis",
+		"chapter":4,
+		"text":"If Cain shall be avenged sevenfold, Truly Lamech seventy and sevenfold.","verse":24
+		}
+		]
+		}
 		"""
