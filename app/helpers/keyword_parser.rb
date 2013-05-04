@@ -15,7 +15,7 @@ module Sinatra
     end
 
     def create_clause(keyword, mode)
-      if "exact".eql? mode
+      if "whole".eql? mode
         {:text => {:$regex => "\\b#{keyword}\\b", :$options => 'i'}}
       else
         {:text => {:$regex => "#{keyword}", :$options => 'i'}}

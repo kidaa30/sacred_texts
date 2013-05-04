@@ -249,8 +249,8 @@ Feature: Bible API
 		</hash>
 		"""
 
-	Scenario: Exact search mode, per book
-		When I visit "/api/v1/bible/Genesis?search=Eve+Cain&mode=exact"
+	Scenario: Whole word search mode, per book
+		When I visit "/api/v1/bible/Genesis?search=Eve+Cain&mode=whole"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
@@ -302,8 +302,8 @@ Feature: Bible API
 		}
 		"""
 
-	Scenario: Exact search mode, per chapter
-		When I visit "/api/v1/bible/Genesis/4?search=Eve+Cain&mode=exact"
+	Scenario: Whole word search mode, per chapter
+		When I visit "/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
@@ -354,3 +354,21 @@ Feature: Bible API
 		]
 		}
 		"""
+
+	Scenario: Large result sets should return 10 results by default for global searches
+		When I visit "/api/v1/bible?search=God"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 10 entries
+
+	Scenario: Large result sets should return 10 results by default for book scoped searches
+		When I visit "/api/v1/bible/Genesis?search=God"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 10 entries
+
+	Scenario: Large result sets should return 10 results by default for chapter scoped searches
+		When I visit "/api/v1/bible/Genesis/1?search=God"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 10 entries

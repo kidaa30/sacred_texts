@@ -31,7 +31,7 @@ class App < Sinatra::Base
       status 400
       format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
     elsif (passage.nil? && !search.nil?)
-      result = Bible.all(:$and => keyword_where_clause(search, mode))
+      result = Bible.where(:$and => keyword_where_clause(search, mode)).limit(10)
       data = {"results" => result.to_a}
       format(data, type)
     else
@@ -50,7 +50,7 @@ class App < Sinatra::Base
       clause = keyword_where_clause(search, mode)
       clause.push({:bookname => book})
       clause.push({:chapter => chapter.to_i})
-      result = Bible.all(:$and => clause)
+      result = Bible.where(:$and => clause).limit(10)
       {"results" => result.to_a}.to_json
     end
   end
@@ -64,7 +64,7 @@ class App < Sinatra::Base
     if !search.nil?
       clause = keyword_where_clause(search, mode)
       clause.push({:bookname => book})
-      result = Bible.all(:$and => clause)
+      result = Bible.where(:$and => clause).limit(10)
       {"results" => result.to_a}.to_json
     end
   end
