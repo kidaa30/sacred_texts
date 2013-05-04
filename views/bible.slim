@@ -31,7 +31,7 @@ html
       p A group of Bible verses is returned in a JSON array named "results".
         For example:
         <pre>
-        {
+        { "": "",
           "results":
           [
             {
@@ -70,6 +70,8 @@ html
         li
           a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;Genesis&#47;4?search=Eve+Cain
 
+      p The number of search results returned is defaulted to 10.  You can
+        Specify this number using the <code>num=N</code> parameter.
 
       p The Bible API supports three scoped levels of searching:
       ul

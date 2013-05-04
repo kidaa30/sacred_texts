@@ -372,3 +372,21 @@ Feature: Bible API
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON at "results" should have 10 entries
+
+	Scenario: Specify result size for global searches
+		When I visit "/api/v1/bible?search=God&num=4"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 4 entries
+
+	Scenario: Specify result size for book scoped searches
+		When I visit "/api/v1/bible/Genesis?search=God&num=4"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 4 entries
+
+	Scenario: Specify result size for chapter scoped searches
+		When I visit "/api/v1/bible/Genesis/1?search=God&num=4"
+		Then the http response status code should be 200
+		Then the content_type should be json
+		And the JSON at "results" should have 4 entries

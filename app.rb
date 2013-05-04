@@ -5,14 +5,13 @@ require 'mongo_mapper'
 require 'json'
 
 # load the models and helpers
-Dir["./app/models/*.rb"].each { |file| require file }
 Dir["./app/helpers/*.rb"].each { |file| require file }
+Dir["./app/models/*.rb"].each { |file| require file }
 Dir["./app/controllers/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
 
-  helpers Sinatra::KeywordParser
   helpers Sinatra::ContentTypes
 
   configure do

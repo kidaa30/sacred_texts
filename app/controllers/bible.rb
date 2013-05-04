@@ -23,7 +23,6 @@ class App < Sinatra::Base
   get '/api/v1/bible' do
     passage = params['passage']
     search = params['search']
-    mode = params['mode']
     type = params['type']
 
     # cannot be both a passage and a search
@@ -31,7 +30,10 @@ class App < Sinatra::Base
       status 400
       format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
     elsif (passage.nil? && !search.nil?)
-      result = Bible.where(:$and => keyword_where_clause(search, mode)).limit(10)
+      mode = params['mode']
+      num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
+      offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
+      result = Bible.by_global_search(search, mode, num)
       data = {"results" => result.to_a}
       format(data, type)
     else
@@ -44,13 +46,12 @@ class App < Sinatra::Base
   get %r{/api/v1/bible/([\w]+)/([\d]+)} do |book, chapter|
     content_type :json
     search = params['search']
-    mode = params['mode']
 
     if !search.nil?
-      clause = keyword_where_clause(search, mode)
-      clause.push({:bookname => book})
-      clause.push({:chapter => chapter.to_i})
-      result = Bible.where(:$and => clause).limit(10)
+      mode = params['mode']
+      num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
+      offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
+      result = Bible.by_chapter_search(book, chapter, search, mode, num)
       {"results" => result.to_a}.to_json
     end
   end
@@ -59,12 +60,12 @@ class App < Sinatra::Base
   get %r{/api/v1/bible/([\w]+)} do |book|
     content_type :json
     search = params['search']
-    mode = params['mode']
 
     if !search.nil?
-      clause = keyword_where_clause(search, mode)
-      clause.push({:bookname => book})
-      result = Bible.where(:$and => clause).limit(10)
+      mode = params['mode']
+      num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
+      offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
+      result = Bible.by_book_search(book, search, mode, num);
       {"results" => result.to_a}.to_json
     end
   end
