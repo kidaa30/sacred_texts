@@ -10,21 +10,14 @@ class Bible
   key :verse, Integer
   key :text, String
 
-  def self.by_global_search(keywords, mode, limit)
+  def self.by_keyword_search(book, chapter, keywords, mode, limit)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
-    where(:$and => clause).limit(limit)
-  end
-
-  def self.by_book_search(book, keywords, mode, limit)
-    clause = KeywordParser.keyword_where_clause(keywords, mode)
-    clause.push({:bookname => book})
-    where(:$and => clause).limit(limit)
-  end
-
-  def self.by_chapter_search(book, chapter, keywords, mode, limit)
-    clause = KeywordParser.keyword_where_clause(keywords, mode)
-    clause.push({:bookname => book})
-    clause.push({:chapter => chapter.to_i})
+    if (!book.nil?)
+      clause.push({:bookname => book})
+    end
+    if (!chapter.nil?)
+      clause.push({:chapter => chapter.to_i})
+    end
     where(:$and => clause).limit(limit)
   end
 

@@ -33,7 +33,7 @@ class App < Sinatra::Base
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
       offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
-      result = Bible.by_global_search(search, mode, num)
+      result = Bible.by_keyword_search(nil, nil, search, mode, num)
       data = {"results" => result.to_a}
       format(data, type)
     else
@@ -51,7 +51,7 @@ class App < Sinatra::Base
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
       offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
-      result = Bible.by_chapter_search(book, chapter, search, mode, num)
+      result = Bible.by_keyword_search(book, chapter, search, mode, num)
       {"results" => result.to_a}.to_json
     end
   end
@@ -65,7 +65,7 @@ class App < Sinatra::Base
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
       offset = (params['start'].to_i > 0 ? params['start'].to_i : nil)
-      result = Bible.by_book_search(book, search, mode, num);
+      result = Bible.by_keyword_search(book, nil, search, mode, num)
       {"results" => result.to_a}.to_json
     end
   end
