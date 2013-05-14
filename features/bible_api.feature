@@ -390,3 +390,45 @@ Feature: Bible API
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON at "results" should have 4 entries
+
+	Scenario: Specify start position for global searches
+		When I visit "/api/v1/bible?search=God&start=1"
+		Then the http response status code should be 200
+		Then the content_type should be json
+    And the JSON at "results/0" should be:
+    """
+    {
+    "bookname":"Genesis",
+    "chapter":1,
+    "text":"And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters",
+    "verse":2
+    }
+    """
+
+	Scenario: Specify start position for book scoped searches
+		When I visit "/api/v1/bible/Mark?search=God&start=1"
+		Then the http response status code should be 200
+		Then the content_type should be json
+    And the JSON at "results/0" should be:
+    """
+    {
+    "bookname":"Mark",
+    "chapter":1,
+    "text":"Now after John was delivered up, Jesus came into Galilee, preaching the gospel of God,",
+    "verse":14
+    }
+    """
+
+	Scenario: Specify start position for chapter scoped searches
+		When I visit "/api/v1/bible/Mark/12?search=God&start=1"
+		Then the http response status code should be 200
+		Then the content_type should be json
+    And the JSON at "results/0" should be:
+    """
+    {
+    "bookname":"Mark",
+    "chapter":12,
+    "text":"And Jesus said unto them, Render unto Caesar the things that are Caesar`s, and unto God the things that are God`s. And they marvelled greatly at him.",
+    "verse":17
+    }
+    """
