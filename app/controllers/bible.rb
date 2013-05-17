@@ -32,9 +32,15 @@ class App < Sinatra::Base
     elsif (passage.nil? && !search.nil?)
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
-      offset = params['start'].to_i
-      result = Bible.by_keyword_search(nil, nil, search, mode, num, offset)
-      data = {"results" => result.to_a}
+      page = (params['page'].to_i > 0 ? params['page'].to_i : 1)
+      result = Bible.by_keyword_search(nil, nil, search, mode, num, page)
+      data =
+        {
+          "results" => result.to_a,
+#          "url" => request.url,
+#          "previous" => request.url,
+#          "next" => request.url
+        }
       format(data, type)
     else
       # passage
@@ -50,8 +56,8 @@ class App < Sinatra::Base
     if !search.nil?
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
-      offset = params['start'].to_i
-      result = Bible.by_keyword_search(book, chapter, search, mode, num, offset)
+      page = (params['page'].to_i > 0 ? params['page'].to_i : 1)
+      result = Bible.by_keyword_search(book, chapter, search, mode, num, page)
       {"results" => result.to_a}.to_json
     end
   end
@@ -64,8 +70,8 @@ class App < Sinatra::Base
     if !search.nil?
       mode = params['mode']
       num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
-      offset = params['start'].to_i
-      result = Bible.by_keyword_search(book, nil, search, mode, num, offset)
+      page = (params['page'].to_i > 0 ? params['page'].to_i : 1)
+      result = Bible.by_keyword_search(book, nil, search, mode, num, page)
       {"results" => result.to_a}.to_json
     end
   end

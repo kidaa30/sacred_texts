@@ -10,7 +10,7 @@ class Bible
   key :verse, Integer
   key :text, String
 
-  def self.by_keyword_search(book, chapter, keywords, mode, limit, offset)
+  def self.by_keyword_search(book, chapter, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!book.nil?)
       clause.push({:bookname => book})
@@ -18,7 +18,10 @@ class Bible
     if (!chapter.nil?)
       clause.push({:chapter => chapter.to_i})
     end
-    where(:$and => clause).skip(offset).limit(limit)
+    where(:$and => clause).paginate({
+      :per_page => limit,
+      :page => page,
+    })
   end
 
   def serializable_hash(options = {})
