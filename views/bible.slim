@@ -10,9 +10,27 @@ html
     .container
       h1 Bible API
 
-      h2 Version
+      /h2 Version
 
-      p This site uses the American Standard Version of 1901.
+      /p This site uses the American Standard Version of 1901.
+
+      h2 REST Resources
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td "/bible/{bookname}/{chapter}/{verse}"
+          td GET
+          td This returs the verse for the given book and chapter
+
+      h3 Example
+      p 
+        ul
+          li
+            a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
 
       h2 Conventions
 
@@ -50,18 +68,29 @@ html
         }
         </pre>
 
-      h2  Individual texts
-
-      p Use the RESTful path <code>/bookname/chapter/verse</code> to retrieve a single verse.  For example:
-
-      ul
-        li
-          a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
-
       h2  Searching
 
-      p Perform keyword searches using the <code>search</code> parameter.
-        Specify that you want the search to return results where only whole
+      table class="table table-bordered"
+        tr
+          th Query Parameter
+          th Notes
+        tr
+          td search
+          td A string to specify search keywords.  Multiple keywords must be
+              separated by a "+".
+        tr
+          td mode
+          td
+        tr
+          td num
+          td An integer specifying the number of results returned.  Default is
+              10.
+        tr
+          td page
+          td An integer specifying the page of the results to display.  Default
+              is 1.
+
+      p Specify that you want the search to return results where only whole
         words match to the keywords by setting the parameter
         <code>mode=whole</code>.  This mode is not set by default.  For example:
       ul
@@ -70,16 +99,12 @@ html
         li
           a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;Genesis&#47;4?search=Eve+Cain
 
-      p The number of search results returned is defaulted to 10.  You can
-        Specify this number using the <code>num=N</code> parameter.
-
       p The Bible API supports three scoped levels of searching:
       ul
         li Full Bible search: <a href="/api/v1/bible?search=Adam">?search=Adam</a>
         li Search within a book: <a href="/api/v1/bible/Genesis?search=Adam">&#47;Genesis?search=Adam</a>
         li Search within a book and chapter: <a href="/api/v1/bible/Genesis/3?search=Adam">&#47;Genesis&#47;3?search=Adam</a>
 
-      p Multiple keywords must be separated by "+".  For example:
       ul
         li
           a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
