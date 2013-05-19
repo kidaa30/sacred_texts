@@ -18,10 +18,14 @@ class Bible
     if (!chapter.nil?)
       clause.push({:chapter => chapter.to_i})
     end
-    where(:$and => clause).paginate({
-      :per_page => limit,
-      :page => page,
-    })
+    # This does not allow me to retrieve the total result count in a single
+    # query
+    #
+    # where(:$and => clause).paginate({
+    #   :per_page => limit,
+    #   :page => page,
+    # })
+    where(:$and => clause).limit(limit).skip(limit * (page - 1))
   end
 
   def serializable_hash(options = {})

@@ -42,6 +42,7 @@ class App < Sinatra::Base
       data =
         {
           "results" => result.to_a,
+#          "total" => result.count,
 #          "url" => request.url,
 #          "previous" => request.url,
 #          "next" => request.url
