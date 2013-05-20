@@ -8,7 +8,8 @@ html
     == slim :navbar
 
     .container
-      h1 Bible API
+      .page-header
+        h1 Bible API
 
       /h2 Version
 
@@ -29,11 +30,13 @@ html
           td This returs the specified verse for the specified chapter of the
               specified book.
 
-      h4 Example
+      h3 Example
       pre
         a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
 
       p <pre>
+        200 OK
+
         {
           "bookname": "Genesis",
           "chapter": 1,
@@ -42,27 +45,7 @@ html
         }
         </pre>
 
-      p A group of Bible verses is returned in a JSON array named "results".
-        For example:
-        <pre>
-        { "": "",
-          "results":
-          [
-            {
-              "bookname": "Genesis",
-              "chapter": 1,
-              "verse": 1,
-              "text" : "In the beginning, God created the heavens and the earth."
-            },
-            {
-              "bookname": "Genesis",
-              "chapter": 1,
-              "verse": 2,
-              "text" : "And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters"
-            }
-          ]
-        }
-        </pre>
+      hr class="bs-docs-separator"
 
       h2 Searching
 
@@ -112,7 +95,7 @@ html
           td An integer specifying the page of the results to display.  Default
               is 1.
 
-      h4 Examples
+      h3 Examples
 
       pre
         a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;Genesis&#47;4?search=Eve+Cain&mode=whole
@@ -126,6 +109,55 @@ html
         a href="/api/v1/bible/Genesis/3?search=Adam" &#47;Genesis&#47;3?search=Adam
       pre
         a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
+
+      p Search results are returned in the a JSON structure like this:
+        <pre>
+        200 OK
+
+        {
+          "results":
+          [
+            {
+              "bookname":"Matthew",
+              "chapter":4,
+              "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
+              "verse":7
+            },
+            ...
+            {
+              "bookname":"Matthew",
+              "chapter":8,
+              "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
+              "verse":18
+            }
+          ],
+          "total_count": 102,
+          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible?search=Jesus&page=1",
+          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible?search=Jesus&page=3"
+        }
+        </pre>
+
+      table class="table table-bordered"
+        tr
+          th Element
+          th Notes
+        tr
+          td results
+          td A JSON array containing the search results.  The size of the array
+              is determined by the query parameter <code>num</code>.
+        tr
+          td total_count
+          td An integer whose value is the total size of the result set.
+        tr
+          td previous_page
+          td The url of the previous page of results, if any previous results exist
+              before the current page of results.
+        tr
+          td next_page
+          td The url of the next page of results, if any further results exist
+              passed the current page of results.
+
+      hr class="bs-docs-separator"
 
       h2  Passages
 
