@@ -14,7 +14,9 @@ html
 
       /p This site uses the American Standard Version of 1901.
 
-      h2 REST Resources
+      h2 Verses
+
+      h3 Resources
 
       table class="table table-bordered"
         tr
@@ -22,22 +24,16 @@ html
           th Method
           th Notes
         tr
-          td "/bible/{bookname}/{chapter}/{verse}"
+          td &#47;bible/{bookname}/{chapter}/{verse}
           td GET
-          td This returs the verse for the given book and chapter
+          td This returs the specified verse for the specified chapter of the
+              specified book.
 
-      h3 Example
-      p 
-        ul
-          li
-            a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
+      h4 Example
+      pre
+        a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
 
-      h2 Conventions
-
-      p An individual Bible verse is identified uniquely by the verse number,
-        chapter number, and book. 
-        For example:
-        <pre>
+      p <pre>
         {
           "bookname": "Genesis",
           "chapter": 1,
@@ -68,7 +64,31 @@ html
         }
         </pre>
 
-      h2  Searching
+      h2 Searching
+
+      h3 Resources
+
+      p The following resources are available for searching.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;bible
+          td GET
+          td The entire Bible
+        tr
+          td &#47;bible/{bookname}
+          td GET
+          td A specified book of the Bible
+        tr
+          td &#47;bible/{bookname}/{chapter}
+          td GET
+          td A specified chapter of a specified book of the Bible
+
+      h3 Query parameters
 
       table class="table table-bordered"
         tr
@@ -80,7 +100,9 @@ html
               separated by a "+".
         tr
           td mode
-          td
+          td Specify that you want the search to return results where only whole
+              words match to the specified keywords by setting this parameter to
+              <code>whole</code>.  This search mode is disabled by default.
         tr
           td num
           td An integer specifying the number of results returned.  Default is
@@ -90,24 +112,20 @@ html
           td An integer specifying the page of the results to display.  Default
               is 1.
 
-      p Specify that you want the search to return results where only whole
-        words match to the keywords by setting the parameter
-        <code>mode=whole</code>.  This mode is not set by default.  For example:
-      ul
-        li
-          a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;Genesis&#47;4?search=Eve+Cain&mode=whole
-        li
-          a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;Genesis&#47;4?search=Eve+Cain
+      h4 Examples
 
-      p The Bible API supports three scoped levels of searching:
-      ul
-        li Full Bible search: <a href="/api/v1/bible?search=Adam">?search=Adam</a>
-        li Search within a book: <a href="/api/v1/bible/Genesis?search=Adam">&#47;Genesis?search=Adam</a>
-        li Search within a book and chapter: <a href="/api/v1/bible/Genesis/3?search=Adam">&#47;Genesis&#47;3?search=Adam</a>
-
-      ul
-        li
-          a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
+      pre
+        a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;Genesis&#47;4?search=Eve+Cain&mode=whole
+      pre
+        a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;Genesis&#47;4?search=Eve+Cain
+      pre
+        a href="/api/v1/bible?search=Adam" ?search=Adam
+      pre
+        a href="/api/v1/bible/Genesis?search=Adam" &#47;Genesis?search=Adam
+      pre
+        a href="/api/v1/bible/Genesis/3?search=Adam" &#47;Genesis&#47;3?search=Adam
+      pre
+        a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
 
       h2  Passages
 
