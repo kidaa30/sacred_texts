@@ -96,6 +96,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":2,
 		"results":[
 		{
 		"bookname":"Daniel",
@@ -119,6 +120,7 @@ Feature: Bible API
 		Then the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Daniel",
@@ -135,6 +137,7 @@ Feature: Bible API
 		Then the JSON should be:
 		"""
 		{
+		"total_count":0,
 		"results":[]
 		}
 		"""
@@ -146,6 +149,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":2,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -169,6 +173,7 @@ Feature: Bible API
 		Then the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Daniel",
@@ -187,6 +192,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -204,6 +210,7 @@ Feature: Bible API
 		Then the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Daniel",
@@ -221,6 +228,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Daniel",
@@ -246,6 +254,7 @@ Feature: Bible API
 		<verse type="integer">16</verse>
 		</result>
 		</results>
+		<total-count type="integer">1</total-count>
 		</hash>
 		"""
 
@@ -256,6 +265,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -274,6 +284,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":4,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -309,6 +320,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":1,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -327,6 +339,7 @@ Feature: Bible API
 		And the JSON should be:
 		"""
 		{
+		"total_count":4,
 		"results":[
 		{
 		"bookname":"Genesis",
@@ -395,40 +408,76 @@ Feature: Bible API
 		When I visit "/api/v1/bible?search=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-    And the JSON at "results/0" should be:
-    """
-    {
-    "bookname":"Genesis",
-    "chapter":1,
-    "text":"And God said, Let the earth put forth grass, herbs yielding seed, [and] fruit-trees bearing fruit after their kind, wherein is the seed thereof, upon the earth: and it was so.",
-    "verse":11
-    }
-    """
+	    And the JSON at "results/0" should be:
+	    """
+	    {
+	    "bookname":"Genesis",
+	    "chapter":1,
+	    "text":"And God said, Let the earth put forth grass, herbs yielding seed, [and] fruit-trees bearing fruit after their kind, wherein is the seed thereof, upon the earth: and it was so.",
+	    "verse":11
+	    }
+	    """
 
 	Scenario: Specify page for book scoped searches
 		When I visit "/api/v1/bible/Mark?search=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-    And the JSON at "results/0" should be:
-    """
-    {
-    "bookname":"Mark",
-    "chapter":4,
-    "text":"And he said, So is the kingdom of God, as if a man should cast seed upon the earth;",
-    "verse":26
-    }
-    """
+	    And the JSON at "results/0" should be:
+	    """
+	    {
+	    "bookname":"Mark",
+	    "chapter":4,
+	    "text":"And he said, So is the kingdom of God, as if a man should cast seed upon the earth;",
+	    "verse":26
+	    }
+	    """
 
 	Scenario: Specify page for chapter scoped searches
 		When I visit "/api/v1/bible/Genesis/2?search=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-    And the JSON at "results/0" should be:
-    """
-    {
-    "bookname":"Genesis",
-    "chapter":2,
-    "text":"And out of the ground Jehovah God formed every beast of the field, and every bird of the heavens; and brought them unto the man to see what he would call them: and whatsoever the man called every living creature, that was the name thereof.",
-    "verse":19
-    }
-    """
+	    And the JSON at "results/0" should be:
+	    """
+	    {
+	    "bookname":"Genesis",
+	    "chapter":2,
+	    "text":"And out of the ground Jehovah God formed every beast of the field, and every bird of the heavens; and brought them unto the man to see what he would call them: and whatsoever the man called every living creature, that was the name thereof.",
+	    "verse":19
+	    }
+	    """
+
+	Scenario: next_page element is not present when there are less than 10 global search results
+		When I visit "/api/v1/bible?search=Ulai"
+		Then the JSON should not have "next_page"
+
+	Scenario: next_page element is present when there are more than 10 global search results
+		When I visit "/api/v1/bible?search=Jesus"
+		Then the JSON at "next_page" should include "/api/v1/bible?search=Jesus&page=2"
+
+	Scenario: next_page element references the next page for global search results
+		When I visit "/api/v1/bible?search=Jesus&page=3"
+		Then the JSON at "next_page" should include "/api/v1/bible?search=Jesus&page=4"
+
+	Scenario: next_page element is not present when there are less than 10 book scoped search results
+		When I visit "/api/v1/bible/Daniel?search=Ulai"
+		Then the JSON should not have "next_page"
+
+	Scenario: next_page element is present when there are more than 10 book scoped search results
+		When I visit "/api/v1/bible/Matthew?search=Jesus"
+		Then the JSON at "next_page" should include "/api/v1/bible/Matthew?search=Jesus&page=2"
+
+	Scenario: next_page element references the next page for book scoped search results
+		When I visit "/api/v1/bible/Matthew?search=Jesus&page=3"
+		Then the JSON at "next_page" should include "/api/v1/bible/Matthew?search=Jesus&page=4"
+
+	Scenario: next_page element is not present when there are less than 10 chapter scoped search results
+		When I visit "/api/v1/bible/Daniel/1?search=Ulai"
+		Then the JSON should not have "next_page"
+
+	Scenario: next_page element is present when there are more than 10 chapter scoped search results
+		When I visit "/api/v1/bible/Matthew/9?search=Jesus"
+		Then the JSON at "next_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=2"
+
+	Scenario: next_page element references the next page for chapter scoped search results
+		When I visit "/api/v1/bible/Matthew/9?search=Jesus&page=1"
+		Then the JSON at "next_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=2"

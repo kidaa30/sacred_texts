@@ -19,6 +19,15 @@ class App < Sinatra::Base
     set :views, ["./views"]
   end
 
+  # Before filter catches commonly used url params.
+  # These are in the request scope.
+  before do
+    @search = params['search']
+    @mode = params['mode']
+    @num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
+    @page = (params['page'].to_i > 0 ? params['page'].to_i : 1)
+  end
+
   # static pages
   get '/' do
     slim :index

@@ -1,14 +1,5 @@
 class App < Sinatra::Base
 
-  # Before filter catches commonly used url params.
-  # These are in the request scope.
-  before do
-    @search = params['search']
-    @mode = params['mode']
-    @num = (params['num'].to_i > 0 ? params['num'].to_i : 10)
-    @page = (params['page'].to_i > 0 ? params['page'].to_i : 1)
-  end
-
   get '/bible' do
     slim :bible
   end
@@ -39,14 +30,19 @@ class App < Sinatra::Base
       format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
     elsif (passage.nil? && !@search.nil?)
       result = Bible.by_keyword_search(nil, nil, @search, @mode, @num, @page)
+      total_count = result.count
       data =
         {
           "results" => result.to_a,
-#          "total" => result.count,
-#          "url" => request.url,
+          "total_count" => total_count,
 #          "previous" => request.url,
-#          "next" => request.url
         }
+
+      # next page link
+      if (total_count > @num)
+        data["next_page"] = url("/api/v1/bible?search=#{@search}&page=#{@page+1}")
+      end
+
       format(data, type)
     else
       {"passage" => "todo"}.to_json
@@ -59,7 +55,11 @@ class App < Sinatra::Base
 
     if !@search.nil?
       result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
-      {"results" => result.to_a}.to_json
+      total_count = result.count
+      {
+        "results" => result.to_a,
+        "total_count" => total_count
+      }.to_json
     end
   end
 
@@ -69,7 +69,11 @@ class App < Sinatra::Base
 
     if !@search.nil?
       result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
-      {"results" => result.to_a}.to_json
+      total_count = result.count
+      {
+        "results" => result.to_a,
+        "total_count" => total_count
+      }.to_json
     end
   end
 end
