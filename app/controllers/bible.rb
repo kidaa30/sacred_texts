@@ -38,7 +38,7 @@ class App < Sinatra::Base
         }
 
       # next page link
-      if (total_count > @num * (@page + 1))
+      if (total_count > @num * @page)
         data["next_page"] = next_page_url(request, @page)
       end
 
@@ -62,7 +62,7 @@ class App < Sinatra::Base
         }
 
       # next page link
-      if (total_count > @num * (@page + 1))
+      if (total_count > @num * @page)
         data["next_page"] = next_page_url(request, @page)
       end
 
@@ -84,7 +84,7 @@ class App < Sinatra::Base
         }
 
       # next page link
-      if (total_count > @num * (@page + 1))
+      if (total_count > @num * @page)
         data["next_page"] = next_page_url(request, @page)
       end
 

@@ -447,7 +447,7 @@ Feature: Bible API
 	    """
 
 	Scenario: next_page element is not present when remaining global search results are less than a page
-    When I visit "/api/v1/bible?search=Jesus&page=88"
+    When I visit "/api/v1/bible?search=Jesus&page=89"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when remaining global search results exceed a page
