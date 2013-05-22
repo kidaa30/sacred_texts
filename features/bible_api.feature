@@ -446,11 +446,11 @@ Feature: Bible API
 	    }
 	    """
 
-	Scenario: next_page element is not present when there are less than 10 global search results
-		When I visit "/api/v1/bible?search=Ulai"
+	Scenario: next_page element is not present when remaining global search results are less than a page
+    When I visit "/api/v1/bible?search=Jesus&page=88"
 		Then the JSON should not have "next_page"
 
-	Scenario: next_page element is present when there are more than 10 global search results
+	Scenario: next_page element is present when remaining global search results exceed a page
 		When I visit "/api/v1/bible?search=Jesus"
 		Then the JSON at "next_page" should include "/api/v1/bible?search=Jesus&page=2"
 
@@ -458,11 +458,11 @@ Feature: Bible API
 		When I visit "/api/v1/bible?search=Jesus&page=3"
 		Then the JSON at "next_page" should include "/api/v1/bible?search=Jesus&page=4"
 
-	Scenario: next_page element is not present when there are less than 10 book scoped search results
+	Scenario: next_page element is not present when remaining book scoped search results are less than a page
 		When I visit "/api/v1/bible/Daniel?search=Ulai"
 		Then the JSON should not have "next_page"
 
-	Scenario: next_page element is present when there are more than 10 book scoped search results
+	Scenario: next_page element is present when remaining book scoped search results exceed a page
 		When I visit "/api/v1/bible/Matthew?search=Jesus"
 		Then the JSON at "next_page" should include "/api/v1/bible/Matthew?search=Jesus&page=2"
 
@@ -470,11 +470,11 @@ Feature: Bible API
 		When I visit "/api/v1/bible/Matthew?search=Jesus&page=3"
 		Then the JSON at "next_page" should include "/api/v1/bible/Matthew?search=Jesus&page=4"
 
-	Scenario: next_page element is not present when there are less than 10 chapter scoped search results
+	Scenario: next_page element is not present when remaining chapter scoped search results are less than a page
 		When I visit "/api/v1/bible/Daniel/1?search=Ulai"
 		Then the JSON should not have "next_page"
 
-	Scenario: next_page element is present when there are more than 10 chapter scoped search results
+	Scenario: next_page element is present when remaining chapter scoped search results exceed a page
 		When I visit "/api/v1/bible/Matthew/9?search=Jesus"
 		Then the JSON at "next_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=2"
 

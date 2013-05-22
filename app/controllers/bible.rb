@@ -35,12 +35,11 @@ class App < Sinatra::Base
         {
           "results" => result.to_a,
           "total_count" => total_count,
-#          "previous" => request.url,
         }
 
       # next page link
-      if (total_count > @num)
-        data["next_page"] = url("/api/v1/bible?search=#{@search}&page=#{@page+1}")
+      if (total_count > @num * (@page + 1))
+        data["next_page"] = next_page_url(request, @page)
       end
 
       format(data, type)
@@ -56,10 +55,18 @@ class App < Sinatra::Base
     if !@search.nil?
       result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
       total_count = result.count
-      {
-        "results" => result.to_a,
-        "total_count" => total_count
-      }.to_json
+      data =
+        {
+          "results" => result.to_a,
+          "total_count" => total_count
+        }
+
+      # next page link
+      if (total_count > @num * (@page + 1))
+        data["next_page"] = next_page_url(request, @page)
+      end
+
+      data.to_json
     end
   end
 
@@ -70,10 +77,18 @@ class App < Sinatra::Base
     if !@search.nil?
       result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
       total_count = result.count
-      {
-        "results" => result.to_a,
-        "total_count" => total_count
-      }.to_json
+      data =
+        {
+          "results" => result.to_a,
+          "total_count" => total_count
+        }
+
+      # next page link
+      if (total_count > @num * (@page + 1))
+        data["next_page"] = next_page_url(request, @page)
+      end
+
+      data.to_json
     end
   end
 end

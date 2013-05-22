@@ -13,6 +13,7 @@ class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
 
   helpers Sinatra::ContentTypes
+  helpers Sinatra::UrlPaging
 
   configure do
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
