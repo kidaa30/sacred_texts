@@ -42,6 +42,11 @@ class App < Sinatra::Base
         data["next_page"] = next_page_url(request, @page)
       end
 
+      # previous page link
+      if (@page > 1)
+        data["previous_page"] = previous_page_url(request, @page)
+      end
+
       format(data, type)
     else
       {"passage" => "todo"}.to_json
@@ -66,6 +71,11 @@ class App < Sinatra::Base
         data["next_page"] = next_page_url(request, @page)
       end
 
+      # previous page link
+      if (@page > 1)
+        data["previous_page"] = previous_page_url(request, @page)
+      end
+
       data.to_json
     end
   end
@@ -86,6 +96,11 @@ class App < Sinatra::Base
       # next page link
       if (total_count > @num * @page)
         data["next_page"] = next_page_url(request, @page)
+      end
+
+      # previous page link
+      if (@page > 1)
+        data["previous_page"] = previous_page_url(request, @page)
       end
 
       data.to_json

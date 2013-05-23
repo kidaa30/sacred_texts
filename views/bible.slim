@@ -32,7 +32,7 @@ html
 
       h3 Example
       pre
-        a href="/api/v1/bible/Genesis/1/1" &#47;Genesis&#47;1&#47;1
+        a href="/api/v1/bible/Genesis/1/1" &#47;bible/Genesis&#47;1&#47;1
 
       p <pre>
         200 OK
@@ -72,6 +72,7 @@ html
           td A specified chapter of a specified book of the Bible
 
       h3 Query parameters
+      p Searches take the following parameters.
 
       table class="table table-bordered"
         tr
@@ -80,7 +81,7 @@ html
         tr
           td search
           td A string to specify search keywords.  Multiple keywords must be
-              separated by a "+".
+              separated by a "+".  This parameter is mandatory.
         tr
           td mode
           td Specify that you want the search to return results where only whole
@@ -88,29 +89,52 @@ html
               <code>whole</code>.  This search mode is disabled by default.
         tr
           td num
-          td An integer specifying the number of results returned.  Default is
+          td An integer specifying the number of results returned.  Its default is
               10.
         tr
           td page
-          td An integer specifying the page of the results to display.  Default
+          td An integer specifying the page of the results to display.  Its default
               is 1.
 
       h3 Examples
 
       pre
-        a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;Genesis&#47;4?search=Eve+Cain&mode=whole
+        a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;bible/Genesis&#47;4?search=Eve+Cain&mode=whole
       pre
-        a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;Genesis&#47;4?search=Eve+Cain
+        a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;bible/Genesis&#47;4?search=Eve+Cain
       pre
-        a href="/api/v1/bible?search=Adam" ?search=Adam
+        a href="/api/v1/bible?search=Adam" &#47;bible?search=Adam
       pre
-        a href="/api/v1/bible/Genesis?search=Adam" &#47;Genesis?search=Adam
+        a href="/api/v1/bible/Genesis?search=Adam" &#47;bible/Genesis?search=Adam
       pre
-        a href="/api/v1/bible/Genesis/3?search=Adam" &#47;Genesis&#47;3?search=Adam
+        a href="/api/v1/bible/Genesis/3?search=Adam" &#47;bible/Genesis&#47;3?search=Adam
       pre
-        a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;Genesis?search=Adam+Eve
+        a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;bible/Genesis?search=Adam+Eve
 
-      p Search results are returned in the a JSON structure like this:
+      p The JSON object returned from a search request consists of the following
+        elements:
+
+      table class="table table-bordered"
+        tr
+          th Element
+          th Notes
+        tr
+          td results
+          td A JSON array containing the search results.  The size of the array
+              is determined by the query parameter <code>num</code>.
+        tr
+          td total_count
+          td An integer whose value is the total size of the result set.
+        tr
+          td previous_page
+          td The url of the previous page of results, if any previous results exist
+              before the current page of results.
+        tr
+          td next_page
+          td The url of the next page of results, if any further results exist
+              passed the current page of results.
+
+      p For example:
         <pre>
         200 OK
 
@@ -136,27 +160,7 @@ html
           "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible?search=Jesus&page=3"
         }
         </pre>
-
-      table class="table table-bordered"
-        tr
-          th Element
-          th Notes
-        tr
-          td results
-          td A JSON array containing the search results.  The size of the array
-              is determined by the query parameter <code>num</code>.
-        tr
-          td total_count
-          td An integer whose value is the total size of the result set.
-        tr
-          td previous_page
-          td The url of the previous page of results, if any previous results exist
-              before the current page of results.
-        tr
-          td next_page
-          td The url of the next page of results, if any further results exist
-              passed the current page of results.
-
+        
       hr class="bs-docs-separator"
 
       h2  Passages

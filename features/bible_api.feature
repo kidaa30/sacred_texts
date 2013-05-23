@@ -447,12 +447,12 @@ Feature: Bible API
 	    """
 
 	Scenario: next_page element is not present when remaining global search results are less than a page
-    When I visit "/api/v1/bible?search=Jesus&page=89"
+		When I visit "/api/v1/bible?search=Jesus&page=89"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when remaining global search results exceed a page
 		When I visit "/api/v1/bible?search=Jesus"
-		Then the JSON at "next_page" should include "/api/v1/bible?search=Jesus&page=2"
+		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for global search results
 		When I visit "/api/v1/bible?search=Jesus&page=3"
@@ -464,7 +464,7 @@ Feature: Bible API
 
 	Scenario: next_page element is present when remaining book scoped search results exceed a page
 		When I visit "/api/v1/bible/Matthew?search=Jesus"
-		Then the JSON at "next_page" should include "/api/v1/bible/Matthew?search=Jesus&page=2"
+		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for book scoped search results
 		When I visit "/api/v1/bible/Matthew?search=Jesus&page=3"
@@ -476,8 +476,44 @@ Feature: Bible API
 
 	Scenario: next_page element is present when remaining chapter scoped search results exceed a page
 		When I visit "/api/v1/bible/Matthew/9?search=Jesus"
-		Then the JSON at "next_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=2"
+		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for chapter scoped search results
 		When I visit "/api/v1/bible/Matthew/9?search=Jesus&page=1"
 		Then the JSON at "next_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=2"
+
+	Scenario: previous_page element is not present when global search results are on the first page
+		When I visit "/api/v1/bible?search=Jesus"
+		Then the JSON should not have "previous_page"
+
+	Scenario: previous_page element is present when global search results are on a page greater than 1 
+		When I visit "/api/v1/bible?search=Jesus&page=2"
+		Then the JSON should have "previous_page"
+
+	Scenario: previous_page element references the previous page for global search results
+		When I visit "/api/v1/bible?search=Jesus&page=3"
+		Then the JSON at "previous_page" should include "/api/v1/bible?search=Jesus&page=2"
+
+	Scenario: previous_page element is not present when book scoped search results are on the first page
+		When I visit "/api/v1/bible/Daniel?search=Ulai"
+		Then the JSON should not have "previous_page"
+
+	Scenario: previous_page element is present when remaining book scoped search results are on a page greater than 1 
+		When I visit "/api/v1/bible/Matthew?search=Jesus&page=2"
+		Then the JSON should have "previous_page"
+
+	Scenario: previous_page element references the previous page for book scoped search results
+		When I visit "/api/v1/bible/Matthew?search=Jesus&page=3"
+		Then the JSON at "previous_page" should include "/api/v1/bible/Matthew?search=Jesus&page=2"
+
+	Scenario: previous_page element is not present when chapter scoped search results are on the first page 
+		When I visit "/api/v1/bible/Daniel/1?search=Ulai"
+		Then the JSON should not have "previous_page"
+
+	Scenario: previous_page element is present when chapter scoped search results are on a page greater than 1 
+		When I visit "/api/v1/bible/Matthew/9?search=Jesus&page=2"
+		Then the JSON should have "previous_page"
+
+	Scenario: previous_page element references the previous page for chapter scoped search results
+		When I visit "/api/v1/bible/Matthew/9?search=Jesus&page=2"
+		Then the JSON at "previous_page" should include "/api/v1/bible/Matthew/9?search=Jesus&page=1"
