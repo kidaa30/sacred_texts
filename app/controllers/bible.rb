@@ -27,8 +27,11 @@ class App < Sinatra::Base
     # cannot be both a passage and a search
     if (!passage.nil? && !@search.nil?)
       status 400
-      format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
-    elsif (passage.nil? && !@search.nil?)
+      data = 
+        {
+          "error" => "Only one of the parameters 'passage' and 'search' can be specified."
+        }
+    elsif !@search.nil?
       result = Bible.by_keyword_search(nil, nil, @search, @mode, @num, @page)
       data =
         {
@@ -36,10 +39,15 @@ class App < Sinatra::Base
           "total_count" => result.count
         }
       add_paging!(data)
-      format(data, type)
+    elsif !passage.nil?
+      data = {"passage" => "todo"}
     else
-      {"passage" => "todo"}.to_json
+      data =
+        {
+          "error" => "This resource is only available for searching via the search url parameter."
+        }
     end
+    format(data, type)
   end
 
   # bible search, per chapter
@@ -55,6 +63,10 @@ class App < Sinatra::Base
         }
       add_paging!(data)
       data.to_json
+    else
+      {
+        "error" => "This resource is only available for searching via the search url parameter."
+      }.to_json
     end
   end
 
@@ -71,6 +83,10 @@ class App < Sinatra::Base
         }
       add_paging!(data)
       data.to_json
+    else
+      {
+        "error" => "This resource is only available for searching via the search url parameter."
+      }.to_json
     end
   end
 end

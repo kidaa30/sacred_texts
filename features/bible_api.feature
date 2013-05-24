@@ -90,6 +90,16 @@ Feature: Bible API
 		}
 		"""
 
+	Scenario: full search, without search parameter results in error
+		When I visit "/api/v1/bible"
+		Then the content_type should be json
+		And the JSON should be:
+    """
+    {
+    "error":"This resource is only available for searching via the search url parameter."
+    }
+    """
+
 	Scenario: full search, single keyword, multiple results
 		When I visit "/api/v1/bible?search=Ulai"
 		Then the content_type should be json
@@ -142,6 +152,16 @@ Feature: Bible API
 		}
 		"""
 
+	Scenario: Chapter search, without search parameter results in error
+		When I visit "/api/v1/bible/Genesis/1"
+		Then the content_type should be json
+		And the JSON should be:
+    """
+    {
+    "error":"This resource is only available for searching via the search url parameter."
+    }
+    """
+
 	Scenario: Chapter search
 		When I visit "/api/v1/bible/Genesis/3?search=Adam"
 		Then the http response status code should be 200
@@ -184,6 +204,16 @@ Feature: Bible API
 		]
 		}
 		"""
+
+	Scenario: Book search, without search parameter results in error
+		When I visit "/api/v1/bible/Genesis"
+		Then the content_type should be json
+		And the JSON should be:
+    """
+    {
+    "error":"This resource is only available for searching via the search url parameter."
+    }
+    """
 
 	Scenario: Book search
 		When I visit "/api/v1/bible/Genesis?search=wounding"
