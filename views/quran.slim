@@ -8,7 +8,8 @@ html
     == slim :navbar
 
     .container
-      h1 Quran API
+      .page-header
+        h1 Quran API
 
       p This site uses an English tranlsation of the Quran by Ahmed Ali, which was
         obtained from <a href="http://tanzil.net">Tanzil.net</a>.
@@ -21,9 +22,150 @@ html
         the Sura, and not the name.
         For example:
         <pre>
+        7:151
+        </pre>
+        refers to the 151st Aya of the 7th Sura.
+
+      h2 Ayat
+
+      h3 Resources
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;quran/{sura}/{aya}
+          td GET
+          td This returns the specified Aya of the specified Sura. 
+
+      h3 Example
+      pre
+        a href="/api/v1/quran/1/1" &#47;quran/1/1
+
+      p <pre>
+        200 OK
+
         {
           "sura": 1,
           "aya": 1,
           "text" : "In the name of Allah, the Entirely Merciful, the Especially Merciful."
         }
         </pre>
+
+      hr class="bs-docs-separator"
+
+      h2 Searching
+
+      h3 Resources
+
+      p The following resources are available for searching.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;quran
+          td GET
+          td The entire Quran
+        tr
+          td &#47;quran/{sura}
+          td GET
+          td A specified sura of the Quran
+
+      h3 Query parameters
+      p Searches take the following parameters.
+
+      table class="table table-bordered"
+        tr
+          th Query Parameter
+          th Notes
+        tr
+          td search
+          td A string to specify search keywords.  Multiple keywords must be
+              separated by a "+".  This parameter is mandatory.
+        tr
+          td mode
+          td Specify that you want the search to return results where only whole
+              words match to the specified keywords by setting this parameter to
+              <code>whole</code>.  This search mode is disabled by default.
+        tr
+          td num
+          td An integer specifying the number of results returned.  Its default is
+              10.
+        tr
+          td page
+          td An integer specifying the page of the results to display.  Its default
+              is 1.
+
+      h3 Examples
+
+      pre
+        a href="/api/v1/quran/Genesis/4?search=Eve+Cain&mode=whole" &#47;quran/Genesis&#47;4?search=Eve+Cain&mode=whole
+      pre
+        a href="/api/v1/quran/Genesis/4?search=Eve+Cain" &#47;quran/Genesis&#47;4?search=Eve+Cain
+      pre
+        a href="/api/v1/quran?search=Adam" &#47;quran?search=Adam
+      pre
+        a href="/api/v1/quran/Genesis?search=Adam" &#47;quran/Genesis?search=Adam
+      pre
+        a href="/api/v1/quran/Genesis/3?search=Adam" &#47;quran/Genesis&#47;3?search=Adam
+      pre
+        a href="/api/v1/quran/Genesis?search=Adam+Eve" &#47;quran/Genesis?search=Adam+Eve
+
+      p The JSON object returned from a search request consists of the following
+        elements:
+
+      table class="table table-bordered"
+        tr
+          th Element
+          th Notes
+        tr
+          td results
+          td A JSON array containing the search results.  The size of the array
+              is determined by the query parameter <code>num</code>.
+        tr
+          td total_count
+          td An integer whose value is the total size of the result set.
+        tr
+          td previous_page
+          td The url of the previous page of results, if any previous results exist
+              before the current page of results.
+        tr
+          td next_page
+          td The url of the next page of results, if any further results exist
+              passed the current page of results.
+
+      p For example:
+        <pre>
+        200 OK
+
+        {
+          "results":
+          [
+            {
+              "sura":4,
+              "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
+              "aya":7
+            },
+            ...
+            {
+              "sura":8,
+              "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
+              "aya":18
+            }
+          ],
+          "total_count": 883,
+          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/quran?search=Jesus&page=1",
+          "next_page":"http://sacredtexts.herokuapp.com/api/v1/quran?search=Jesus&page=3"
+        }
+        </pre>
+        
+      hr class="bs-docs-separator"
+
+      h2  Passages
+
+      p Returns a json object contain an array element named "passage".
