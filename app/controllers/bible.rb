@@ -30,23 +30,12 @@ class App < Sinatra::Base
       format({"error" => "Only one of the parameters 'passage' and 'search' can be specified."}, type)
     elsif (passage.nil? && !@search.nil?)
       result = Bible.by_keyword_search(nil, nil, @search, @mode, @num, @page)
-      total_count = result.count
       data =
         {
           "results" => result.to_a,
-          "total_count" => total_count,
+          "total_count" => result.count
         }
-
-      # next page link
-      if (total_count > @num * @page)
-        data["next_page"] = next_page_url(request, @page)
-      end
-
-      # previous page link
-      if (@page > 1)
-        data["previous_page"] = previous_page_url(request, @page)
-      end
-
+      add_paging!(data)
       format(data, type)
     else
       {"passage" => "todo"}.to_json
@@ -59,23 +48,12 @@ class App < Sinatra::Base
 
     if !@search.nil?
       result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
-      total_count = result.count
       data =
         {
           "results" => result.to_a,
-          "total_count" => total_count
+          "total_count" => result.count
         }
-
-      # next page link
-      if (total_count > @num * @page)
-        data["next_page"] = next_page_url(request, @page)
-      end
-
-      # previous page link
-      if (@page > 1)
-        data["previous_page"] = previous_page_url(request, @page)
-      end
-
+      add_paging!(data)
       data.to_json
     end
   end
@@ -86,23 +64,12 @@ class App < Sinatra::Base
 
     if !@search.nil?
       result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
-      total_count = result.count
       data =
         {
           "results" => result.to_a,
-          "total_count" => total_count
+          "total_count" => result.count
         }
-
-      # next page link
-      if (total_count > @num * @page)
-        data["next_page"] = next_page_url(request, @page)
-      end
-
-      # previous page link
-      if (@page > 1)
-        data["previous_page"] = previous_page_url(request, @page)
-      end
-
+      add_paging!(data)
       data.to_json
     end
   end
