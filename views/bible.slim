@@ -20,9 +20,7 @@ html
         </pre>
         refers to the 1st verse in the 4th chapter of the book of Genesis.
 
-      h2 Verses
-
-      h3 Resources
+      h2 Resources
 
       table class="table table-bordered"
         tr
@@ -30,14 +28,19 @@ html
           th Method
           th Notes
         tr
-          td &#47;bible/{bookname}/{chapter}/{verse}
+          td &#47;bible/books/{bookname}/chapters/{chapter_number}/verses
           td GET
-          td This returs the specified verse for the specified chapter of the
+          td The collection of all verses for the specified chapter of the
+              specified book.
+        tr
+          td &#47;bible/books/{bookname}/chapters/{chapter_number}/verses/{verse_number}
+          td GET
+          td The specified verse for the specified chapter of the
               specified book.
 
       h3 Example
       pre
-        a href="/api/v1/bible/Genesis/1/1" &#47;bible/Genesis&#47;1&#47;1
+        a href="/api/v1/bible/books/Genesis/chapters/1/verses/1" &#47;bible/books/Genesis/chapters/1/verses/1
 
       p <pre>
         200 OK
@@ -56,7 +59,7 @@ html
 
       h3 Resources
 
-      p The following resources are available for searching.
+      p Verse resources are available for scoped searching.
 
       table class="table table-bordered"
         tr
@@ -64,15 +67,15 @@ html
           th Method
           th Notes
         tr
-          td &#47;bible
+          td &#47;bible/search
           td GET
           td The entire Bible
         tr
-          td &#47;bible/{bookname}
+          td &#47;bible/books/{bookname}/search
           td GET
           td A specified book of the Bible
         tr
-          td &#47;bible/{bookname}/{chapter}
+          td &#47;bible/books/{bookname}/chapters/{chapter_number}/search
           td GET
           td A specified chapter of a specified book of the Bible
 
@@ -84,7 +87,7 @@ html
           th Query Parameter
           th Notes
         tr
-          td search
+          td q
           td A string to specify search keywords.  Multiple keywords must be
               separated by a "+".  This parameter is mandatory.
         tr
@@ -104,17 +107,17 @@ html
       h3 Examples
 
       pre
-        a href="/api/v1/bible/Genesis/4?search=Eve+Cain&mode=whole" &#47;bible/Genesis&#47;4?search=Eve+Cain&mode=whole
+        a href="/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain&mode=whole" &#47;bible/books/Genesis/chapters/4/search?q=Eve+Cain&mode=whole
       pre
-        a href="/api/v1/bible/Genesis/4?search=Eve+Cain" &#47;bible/Genesis&#47;4?search=Eve+Cain
+        a href="/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain" &#47;bible/books/Genesis/chapters/4/search?q=Eve+Cain
       pre
-        a href="/api/v1/bible?search=Adam" &#47;bible?search=Adam
+        a href="/api/v1/bible/search?q=Adam" &#47;bible/search?q=Adam
       pre
-        a href="/api/v1/bible/Genesis?search=Adam" &#47;bible/Genesis?search=Adam
+        a href="/api/v1/bible/books/Genesis/search/?q=Adam" &#47;bible/books/Genesis/search?q=Adam
       pre
-        a href="/api/v1/bible/Genesis/3?search=Adam" &#47;bible/Genesis&#47;3?search=Adam
+        a href="/api/v1/bible/books/Genesis/chapters/3/search/q==Adam" &#47;bible/books/Genesis/chapters/3/search?q=Adam
       pre
-        a href="/api/v1/bible/Genesis?search=Adam+Eve" &#47;bible/Genesis?search=Adam+Eve
+        a href="/api/v1/bible/books/Genesis/search/?q=Adam+Eve" &#47;bible/books/Genesis/search?q=Adam+Eve
 
       p The JSON object returned from a search request consists of the following
         elements:
@@ -161,8 +164,8 @@ html
             }
           ],
           "total_count": 883,
-          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible?search=Jesus&page=1",
-          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible?search=Jesus&page=3"
+          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible/search/?q=Jesus&page=1",
+          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible/search/?q=Jesus&page=3"
         }
         </pre>
         

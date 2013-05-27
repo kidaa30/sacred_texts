@@ -5,9 +5,9 @@ class App < Sinatra::Base
   end
 
   # Single verse
-  get %r{/api/v1/bible/([\w]+)/([\d]+)/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
+  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
 
-    result = Bible.find_by_bookname_and_chapter_and_verse(book,
+    result = Bible.find_by_bookname_and_chapter_and_verse(book.capitalize,
                                                           chapter.to_i,
                                                           verse.to_i)
 
@@ -20,7 +20,7 @@ class App < Sinatra::Base
   end
 
   # Base url for complete search, passage lookup
-  get '/api/v1/bible' do
+  get '/api/v1/bible/search' do
     passage = params['passage']
     type = params['type']
 
@@ -51,7 +51,7 @@ class App < Sinatra::Base
   end
 
   # bible search, per chapter
-  get %r{/api/v1/bible/([\w]+)/([\d]+)} do |book, chapter|
+  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/search} do |book, chapter|
     content_type :json
 
     if !@search.nil?
@@ -71,7 +71,7 @@ class App < Sinatra::Base
   end
 
   # bible search, per book
-  get %r{/api/v1/bible/([\w]+)} do |book|
+  get %r{/api/v1/bible/books/([\w]+)/search} do |book|
     content_type :json
 
     if !@search.nil?

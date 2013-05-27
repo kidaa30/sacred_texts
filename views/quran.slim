@@ -36,13 +36,17 @@ html
           th Method
           th Notes
         tr
-          td &#47;quran/{sura}/{aya}
+          td &#47;quran/suwar/{sura_number}/ayat/
           td GET
-          td This returns the specified Aya of the specified Sura. 
+          td The collection of all Ayat for the specified Sura. 
+        tr
+          td &#47;quran/suwar/{sura_number}/ayat/{aya_number}
+          td GET
+          td The specified Aya of the specified Sura. 
 
       h3 Example
       pre
-        a href="/api/v1/quran/1/1" &#47;quran/1/1
+        a href="/api/v1/quran/suwar/1/ayat/1" &#47;quran/suwar/1/ayat/1
 
       p <pre>
         200 OK

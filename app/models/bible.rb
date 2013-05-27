@@ -13,7 +13,7 @@ class Bible
   def self.by_keyword_search(book, chapter, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!book.nil?)
-      clause.push({:bookname => book})
+      clause.push({:bookname => book.capitalize})
     end
     if (!chapter.nil?)
       clause.push({:chapter => chapter.to_i})

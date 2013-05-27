@@ -5,7 +5,7 @@ class App < Sinatra::Base
   end
 
   # Single aya
-  get %r{/api/v1/quran/([\d]+)/([\d]+)} do |sura, aya|
+  get %r{/api/v1/quran/suwar/([\d]+)/ayat/([\d]+)} do |sura, aya|
     content_type :json
 
     result = Quran.find_by_sura_and_aya(sura.to_i, aya.to_i)
@@ -19,7 +19,7 @@ class App < Sinatra::Base
   end
 
   # Base url for complete search, passage lookup
-  get '/api/v1/quran' do
+  get '/api/v1/quran/search' do
     passage = params['passage']
     type = params['type']
 
@@ -50,7 +50,7 @@ class App < Sinatra::Base
   end
 
   # search, per sura
-  get %r{/api/v1/quran/([\w]+)} do |sura|
+  get %r{/api/v1/quran/suwar/([\w]+)/search} do |sura|
     content_type :json
 
     if !@search.nil?
