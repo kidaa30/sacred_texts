@@ -8,6 +8,10 @@ class Quran
   key :aya, Integer
   key :text, String
 
+  def self.by_sura(sura, limit, page)
+    where(:sura => sura).limit(limit).skip(limit * (page - 1))
+  end
+
   def self.by_keyword_search(sura, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!sura.nil?)

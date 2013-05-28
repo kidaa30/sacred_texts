@@ -34,7 +34,13 @@ module Sinatra
       if url.include? "page"
         url.gsub!(/page=\d+/, "page=#{new_page}")
       else
-        url += "&page=#{new_page}"
+        # Special handling if there are no url parameters.
+        # In that case, params will always have 2 keys: splat, captures.
+        if params.size == 2
+          url += "?page=#{new_page}"
+        else
+          url += "&page=#{new_page}"
+        end
       end
 
       url

@@ -10,6 +10,10 @@ class Bible
   key :verse, Integer
   key :text, String
 
+  def self.by_bookname_and_chapter(book, chapter, limit, page)
+    where(:bookname => book, :chapter => chapter).limit(limit).skip(limit * (page - 1))
+  end
+
   def self.by_keyword_search(book, chapter, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!book.nil?)

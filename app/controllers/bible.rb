@@ -4,7 +4,7 @@ class App < Sinatra::Base
     slim :bible
   end
 
-  # Single verse
+  # bible/books/chapters/{x}/verses/{y}
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
 
     result = Bible.find_by_bookname_and_chapter_and_verse(book.capitalize,
@@ -17,6 +17,26 @@ class App < Sinatra::Base
     else
       format(result, type)
     end
+  end
+
+  # bible/books/chapters/{x}/verses
+  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses} do |book, chapter|
+    content_type :json
+
+    result = Bible.by_bookname_and_chapter(book.capitalize, chapter.to_i, @num, @page)
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "verses" => result.to_a,
+          "total_count" => result.count
+        }
+      add_paging!(data)
+    end
+    data.to_json
   end
 
   # Base url for complete search, passage lookup

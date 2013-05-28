@@ -4,7 +4,7 @@ class App < Sinatra::Base
     slim :quran
   end
 
-  # Single aya
+  # GET /quran/suwar/{x}/ayat/{y}
   get %r{/api/v1/quran/suwar/([\d]+)/ayat/([\d]+)} do |sura, aya|
     content_type :json
 
@@ -14,8 +14,28 @@ class App < Sinatra::Base
       status 404
       {"error" => "No results found."}
     else
-      result.to_json(except: :id)
+      result.to_json
     end
+  end
+
+  # GET /quran/suwar/{x}/ayat
+  get %r{/api/v1/quran/suwar/([\d]+)/ayat} do |sura|
+    content_type :json
+
+    result = Quran.by_sura(sura.to_i, @num, @page)
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "ayat" => result.to_a,
+          "total_count" => result.count
+        }
+      add_paging!(data)
+    end
+    data.to_json
   end
 
   # Base url for complete search, passage lookup
