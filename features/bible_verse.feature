@@ -96,9 +96,7 @@ Feature: Bible verse resource
 		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses"
 		And the JSON should have "verses"
 		And the JSON at "verses" should be an array
-		And the JSON at "verses" should have 10 entries
 		And the JSON at "total_count" should be 31
-		And the JSON should have "next_page"
 
 	Scenario: Lookup a collection of verses for valid book and invalid chapter
 		When I visit "/api/v1/bible/books/Genesis/chapters/99/verses"
@@ -119,3 +117,42 @@ Feature: Bible verse resource
 		"error":"No results found."
 		}
 		"""
+
+	Scenario: Lookup a collection of verses should return 10 results by default
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses"
+		And the JSON should have "verses"
+		And the JSON at "verses" should have 10 entries
+
+	Scenario: Lookup a collection of verses, specifying the page size 
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?num=4"
+		And the JSON should have "verses"
+		And the JSON at "verses" should have 4 entries
+
+	Scenario: Lookup a collection of verses, specifying the start page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=2"
+		And the JSON should have "verses"
+		And the JSON at "verses/0/verse" should be 11
+
+	Scenario: next_page element is not present when there are not enough verses to overflow to another page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=4"
+		Then the JSON should not have "next_page"
+
+	Scenario: next_page element is present when there are enough verses to overflow to another page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=3"
+		Then the JSON should have "next_page"
+
+	Scenario: next_page element references the next page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=3"
+		Then the JSON at "next_page" should include "/api/v1/bible/books/Genesis/chapters/1/verses?page=4"
+
+	Scenario: prev_page element is not present when on the firt page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=1"
+		Then the JSON should not have "previous_page"
+
+	Scenario: prev_page element is present when on page greater than 1
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=3"
+		Then the JSON should have "previous_page"
+
+	Scenario: prev_page element references the previous page
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?page=3"
+		Then the JSON at "previous_page" should include "/api/v1/bible/books/Genesis/chapters/1/verses?page=2"

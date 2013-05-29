@@ -4,7 +4,7 @@ class App < Sinatra::Base
     slim :bible
   end
 
-  # bible/books/chapters/{x}/verses/{y}
+  # GET bible/books/chapters/{x}/verses/{y}
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
 
     result = Bible.find_by_bookname_and_chapter_and_verse(book.capitalize,
@@ -19,7 +19,7 @@ class App < Sinatra::Base
     end
   end
 
-  # bible/books/chapters/{x}/verses
+  # GET bible/books/chapters/{x}/verses
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses} do |book, chapter|
     content_type :json
 

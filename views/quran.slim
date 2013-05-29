@@ -108,17 +108,11 @@ html
       h3 Examples
 
       pre
-        a href="/api/v1/quran/Genesis/4?search=Eve+Cain&mode=whole" &#47;quran/Genesis&#47;4?search=Eve+Cain&mode=whole
+        a href="/api/v1/quran/suwar/1/search?q=Allah" &#47;api/v1/quran/suwar/1/search?q=Allah
       pre
-        a href="/api/v1/quran/Genesis/4?search=Eve+Cain" &#47;quran/Genesis&#47;4?search=Eve+Cain
+        a href="/api/v1/quran/suwar/1/search?q=Allah+Lord" &#47;api/v1/quran/suwar/1/search?q=Allah+Lord
       pre
-        a href="/api/v1/quran?search=Adam" &#47;quran?search=Adam
-      pre
-        a href="/api/v1/quran/Genesis?search=Adam" &#47;quran/Genesis?search=Adam
-      pre
-        a href="/api/v1/quran/Genesis/3?search=Adam" &#47;quran/Genesis&#47;3?search=Adam
-      pre
-        a href="/api/v1/quran/Genesis?search=Adam+Eve" &#47;quran/Genesis?search=Adam+Eve
+        a href="/api/v1/quran/search?q=Adam" &#47;api/v1/quran/search?q=Adam
 
       p The JSON object returned from a search request consists of the following
         elements:
@@ -151,25 +145,21 @@ html
           "results":
           [
             {
-              "sura":4,
-              "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
-              "aya":7
+              "aya":258,
+              "sura":2,
+              "text":"Have you thought of the man who argued with Abraham about his Lord because God had given him a kingdom? When Abraham said: \"My Lord is the giver of life and death,\" he replied: \"I am the giver of life and death.\" And Abraham said: \"God makes the sun rise from the East; so you make it rise from the West,\" and dumbfounded was the infidel. God does not guide those who are unjust."
             },
             ...
             {
-              "sura":8,
-              "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
-              "aya":18
+              "aya":54,
+              "sura":4,
+              "text":"Are they so envious of others for what God has given them of His bounty? So We had given the Book and the Law to Abraham's family, and given them great dominion."
             }
           ],
-          "total_count": 883,
-          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/quran?search=Jesus&page=1",
-          "next_page":"http://sacredtexts.herokuapp.com/api/v1/quran?search=Jesus&page=3"
+          "total_count": 71,
+          "next_page":"http://localhost:9393/api/v1/quran/search?q=abraham&page=3",
+          "previous_page":"http://localhost:9393/api/v1/quran/search?q=abraham&page=1"
         }
         </pre>
         
       hr class="bs-docs-separator"
-
-      h2  Passages
-
-      p Returns a json object contain an array element named "passage".
