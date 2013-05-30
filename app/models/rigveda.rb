@@ -1,4 +1,4 @@
-require relative './keyword_parser'
+require_relative './keyword_parser'
 
 class Rigveda
   include MongoMapper::Document
