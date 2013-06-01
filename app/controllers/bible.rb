@@ -4,6 +4,48 @@ class App < Sinatra::Base
     slim :bible
   end
 
+  # GET bible/verses
+  get %r{/api/v1/bible/verses} do
+    content_type :json
+
+    result = Bible.paginate({
+       :per_page => @num,
+       :page => @page,
+    })
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "verses" => result.to_a,
+          "total_count" => 31103
+        }
+      add_paging!(data)
+    end
+    data.to_json
+  end
+
+  # GET bible/books/verses
+  get %r{/api/v1/bible/books/([\w]+)/verses} do |book|
+    content_type :json
+    result = Bible.by_bookname(book.capitalize, @num, @page)
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "verses" => result.to_a,
+          "total_count" => result.count
+        }
+      add_paging!(data)
+    end
+    data.to_json
+  end
+
   # GET bible/books/chapters/{x}/verses/{y}
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
 
@@ -22,7 +64,6 @@ class App < Sinatra::Base
   # GET bible/books/chapters/{x}/verses
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses} do |book, chapter|
     content_type :json
-
     result = Bible.by_bookname_and_chapter(book.capitalize, chapter.to_i, @num, @page)
 
     if result.empty?

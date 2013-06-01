@@ -27,7 +27,7 @@ Feature: Bible verse resource
 		And the JSON at "verses/0/verse" should be 11
 
 	Scenario: next_page element is not present when there are not enough verses to overflow to another page
-		When I visit "/api/v1/bible/verses?page=4"
+		When I visit "/api/v1/bible/verses?page=3110"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when there are enough verses to overflow to another page

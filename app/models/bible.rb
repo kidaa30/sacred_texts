@@ -10,6 +10,10 @@ class Bible
   key :verse, Integer
   key :text, String
 
+  def self.by_bookname(book, limit, page)
+    where(:bookname => book).limit(limit).skip(limit * (page - 1))
+  end
+
   def self.by_bookname_and_chapter(book, chapter, limit, page)
     where(:bookname => book, :chapter => chapter).limit(limit).skip(limit * (page - 1))
   end
