@@ -22,11 +22,31 @@ html
 
       h2 Resources
 
+      h3 Verses
+
+      p A verse exists at four levels: as a collection belonging to the Bible as a
+        whole, as a subcollection belonging to a book of the Bible, as a
+        subcollection belonging
+        to a chapter of a book of the Bible, and individually, completely
+        referenced by book, chapter, and verse number.
+      p This was done to fit the separate use cases of reading the entire Bible,
+        reading a book of the Bible, reading a chapter of a book of the Bible,
+        and reading an individual verse.
+
       table class="table table-bordered"
         tr
           th URI
           th Method
           th Notes
+        tr
+          td &#47;bible/verses
+          td GET
+          td The collection of all verses 
+        tr
+          td &#47;bible/books/{bookname}/verses
+          td GET
+          td The collection of all verses for the specified book 
+              specified book.
         tr
           td &#47;bible/books/{bookname}/chapters/{chapter_number}/verses
           td GET
@@ -38,7 +58,7 @@ html
           td The specified verse for the specified chapter of the
               specified book.
 
-      h3 Example
+      h4 Example
       pre
         a href="/api/v1/bible/books/Genesis/chapters/1/verses/1" &#47;bible/books/Genesis/chapters/1/verses/1
 
@@ -46,20 +66,17 @@ html
         200 OK
 
         {
-          "bookname": "Genesis",
-          "chapter": 1,
-          "verse": 1,
+          "bookname" : "Genesis",
+          "chapter" : 1,
+          "verse" : 1,
           "text" : "In the beginning, God created the heavens and the earth."
         }
         </pre>
 
       hr class="bs-docs-separator"
 
-      h2 Searching
-
-      h3 Resources
-
-      p Verse resources are available for scoped searching.
+      h3 Books
+      p Books are only defined by their title and content.
 
       table class="table table-bordered"
         tr
@@ -67,17 +84,54 @@ html
           th Method
           th Notes
         tr
-          td &#47;bible/search
+          td &#47;bible/books
           td GET
-          td The entire Bible
+          td The collection of all books
         tr
-          td &#47;bible/books/{bookname}/search
+          td &#47;bible/books/{bookname}
           td GET
-          td A specified book of the Bible
-        tr
-          td &#47;bible/books/{bookname}/chapters/{chapter_number}/search
-          td GET
-          td A specified chapter of a specified book of the Bible
+          td A single book
+  
+      h4 Example
+      pre
+        a href="/api/v1/bible/books" &#47;bible/books
+
+      p <pre>
+        200 OK
+
+        {
+          "books" :
+          [
+            "Genesis" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis",
+            ...
+            "2 Samuel" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
+          ],
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books?page=2"
+        }
+        </pre>
+
+      pre
+        a href="/api/v1/bible/books/Genesis" &#47;bible/books/Genesis
+
+      p <pre>
+        200 OK
+
+        {
+          "bookname" : "Genesis",
+          "chapters" :
+          [
+            1 : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/1/verses",
+            ...
+            10 : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/10/verses"
+          ],
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis?page=2"
+        }
+        </pre>
+      
+      h2 Searching
+
+      p Verse collections are available for keyword searches, scoped at each
+        aggregate level.
 
       h3 Query parameters
       p Searches take the following parameters.
@@ -107,17 +161,17 @@ html
       h3 Examples
 
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain&mode=whole" &#47;bible/books/Genesis/chapters/4/search?q=Eve+Cain&mode=whole
+        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain" &#47;bible/books/Genesis/chapters/4/search?q=Eve+Cain
+        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain
       pre
-        a href="/api/v1/bible/search?q=Adam" &#47;bible/search?q=Adam
+        a href="/api/v1/bible/verses?q=Adam" &#47;bible/verses?q=Adam
       pre
-        a href="/api/v1/bible/books/Genesis/search/?q=Adam" &#47;bible/books/Genesis/search?q=Adam
+        a href="/api/v1/bible/books/Genesis/verses/?q=Adam" &#47;bible/books/Genesis/verses?q=Adam
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/3/search/q==Adam" &#47;bible/books/Genesis/chapters/3/search?q=Adam
+        a href="/api/v1/bible/books/Genesis/chapters/3/verses/q==Adam" &#47;bible/books/Genesis/chapters/3/verses?q=Adam
       pre
-        a href="/api/v1/bible/books/Genesis/search/?q=Adam+Eve" &#47;bible/books/Genesis/search?q=Adam+Eve
+        a href="/api/v1/bible/books/Genesis/verses/?q=Adam+Eve" &#47;bible/books/Genesis/verses?q=Adam+Eve
 
       p The JSON object returned from a search request consists of the following
         elements:
@@ -164,13 +218,9 @@ html
             }
           ],
           "total_count": 883,
-          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible/search/?q=Jesus&page=1",
-          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible/search/?q=Jesus&page=3"
+          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=1",
+          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=3"
         }
         </pre>
         
       hr class="bs-docs-separator"
-
-      h2  Passages
-
-      p Returns a json object contain an array element named "passage".
