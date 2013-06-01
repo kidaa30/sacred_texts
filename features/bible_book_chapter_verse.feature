@@ -30,33 +30,6 @@ Feature: Bible book/chapter/verse resource
 		}
 		"""
 
-	Scenario: Lookup a valid verse, json content type
-		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses/1.json"
-		Then the http response status code should be 200
-		And the JSON should be:
-		"""
-		{
-		"bookname":"Genesis",
-		"chapter":1,
-		"verse":1,
-		"text":	"In the beginning God created the heavens and the earth."
-		}
-		"""
-
-	Scenario: Lookup a valid verse, xml content type
-		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses/1.xml"
-		Then the http response status code should be 200
-		And the XML should be:
-		"""
-		<?xml version="1.0" encoding="UTF-8"?>
-		<bible>
-		<bookname>Genesis</bookname>
-		<chapter type="integer">1</chapter>
-		<verse type="integer">1</verse>
-		<text>In the beginning God created the heavens and the earth.</text>
-		</bible>
-		"""
-
 	Scenario: Lookup a verse with an invalid bookname
 		When I visit "/api/v1/bible/books/blarg/chapters/1/verses/1"
 		Then the http response status code should be 404

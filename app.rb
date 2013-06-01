@@ -12,7 +12,8 @@ Dir["./app/controllers/*.rb"].each { |file| require file }
 class App < Sinatra::Base
   register Sinatra::Twitter::Bootstrap::Assets
 
-  helpers Sinatra::ContentTypes
+  # Currently only supporting JSON
+  # helpers Sinatra::ContentTypes
   helpers Sinatra::UrlPaging
 
   configure do

@@ -1,41 +1,13 @@
 Feature: Bible API
 
-	Scenario: complex lookup can have passage param
-		When I visit "/api/v1/bible?passage=Genesis 1:1"
-		Then the http response status code should be 200
-
-	Scenario: complex lookup can have search param
-		When I visit "/api/v1/bible/search?q=Job"
-		Then the http response status code should be 200
-
-	Scenario: Complex lookuo cannot have both passage and search params at the same time
-		When I visit "/api/v1/bible?passage=Genesis 1:1&search=Job"
-		Then the http response status code should be 400
-		And the JSON should be:
-		"""
-		{
-		"error":"Only one of the parameters 'passage' and 'search' can be specified."
-		}
-		"""
-
-	Scenario: full search, without search parameter results in error
-		When I visit "/api/v1/bible/search"
-		Then the content_type should be json
-		And the JSON should be:
-    """
-    {
-    "error":"This resource is only available for searching via the search url parameter."
-    }
-    """
-
 	Scenario: full search, single keyword, multiple results
-		When I visit "/api/v1/bible/search?q=Ulai"
+		When I visit "/api/v1/bible/verses?q=Ulai"
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":2,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Daniel",
 		"chapter":8,
@@ -53,13 +25,13 @@ Feature: Bible API
 		"""
 
 	Scenario: full search, multiple keywords
-		When I visit "/api/v1/bible/search?q=ulai+Gabriel"
+		When I visit "/api/v1/bible/verses?q=ulai+Gabriel"
 		Then the content_type should be json
 		Then the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Daniel",
 		"chapter":8,
@@ -71,34 +43,24 @@ Feature: Bible API
 		"""
 
 	Scenario: full search, no results
-		When I visit "/api/v1/bible/search?q=blarg"
-		Then the JSON should be:
+		When I visit "/api/v1/bible/verses?q=blarg"
+		Then the http response status code should be 404
+		And the JSON should be:
 		"""
-		{
-		"total_count":0,
-		"results":[]
+    {
+    "error" : "No results found."
 		}
 		"""
 
-	Scenario: Chapter search, without search parameter results in error
-		When I visit "/api/v1/bible/books/Genesis/chapters/1/search/"
-		Then the content_type should be json
-		And the JSON should be:
-    """
-    {
-    "error":"This resource is only available for searching via the search url parameter."
-    }
-    """
-
 	Scenario: Chapter search
-		When I visit "/api/v1/bible/books/Genesis/chapters/3/search?q=Adam"
+		When I visit "/api/v1/bible/books/Genesis/chapters/3/verses?q=Adam"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":2,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":3,
@@ -116,13 +78,13 @@ Feature: Bible API
 		"""
 
 	Scenario: Chapter search, multiple keywords
-		When I visit "/api/v1/bible/books/Daniel/chapters/8/search?q=ulai+Gabriel"
+		When I visit "/api/v1/bible/books/Daniel/chapters/8/verses?q=ulai+Gabriel"
 		Then the content_type should be json
 		Then the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Daniel",
 		"chapter":8,
@@ -133,25 +95,15 @@ Feature: Bible API
 		}
 		"""
 
-	Scenario: Book search, without search parameter results in error
-		When I visit "/api/v1/bible/books/Genesis/search/"
-		Then the content_type should be json
-		And the JSON should be:
-    """
-    {
-    "error":"This resource is only available for searching via the search url parameter."
-    }
-    """
-
 	Scenario: Book search
-		When I visit "/api/v1/bible/books/Genesis/search?q=wounding"
+		When I visit "/api/v1/bible/books/Genesis/verses?q=wounding"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":4,
@@ -163,13 +115,13 @@ Feature: Bible API
 		"""
 
 	Scenario: Book search, multiple keywords
-		When I visit "/api/v1/bible/books/Daniel/search?q=ulai+Gabriel"
+		When I visit "/api/v1/bible/books/Daniel/verses?q=ulai+Gabriel"
 		Then the content_type should be json
 		Then the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Daniel",
 		"chapter":8,
@@ -181,13 +133,13 @@ Feature: Bible API
 		"""
 
 	Scenario: Full search, type json
-		When I visit "/api/v1/bible/search?q=ulai+Gabriel&type=json"
+		When I visit "/api/v1/bible/verses?q=ulai+Gabriel&type=json"
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Daniel",
 		"chapter":8,
@@ -198,33 +150,15 @@ Feature: Bible API
 		}
 		"""
 
-	Scenario: Full search, type xml
-		When I visit "/api/v1/bible/search?q=ulai+Gabriel&type=xml"
-		Then the XML should be:
-		"""
-		<?xml version="1.0" encoding="UTF-8"?>
-		<hash>
-		<results type="array">
-		<result>
-		<bookname>Daniel</bookname>
-		<chapter type="integer">8</chapter>
-		<text>And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.</text>
-		<verse type="integer">16</verse>
-		</result>
-		</results>
-		<total-count type="integer">1</total-count>
-		</hash>
-		"""
-
 	Scenario: Whole word search mode, per book
-		When I visit "/api/v1/bible/books/Genesis/search?q=Eve+Cain&mode=whole"
+		When I visit "/api/v1/bible/books/Genesis/verses?q=Eve+Cain&mode=whole"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":4,
@@ -236,14 +170,14 @@ Feature: Bible API
 		"""
 
 	Scenario: Regular search mode, per book
-		When I visit "/api/v1/bible/books/Genesis/search?q=Eve+Cain"
+		When I visit "/api/v1/bible/books/Genesis/verses?q=Eve+Cain"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":4,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":4,
@@ -272,14 +206,14 @@ Feature: Bible API
 		"""
 
 	Scenario: Whole word search mode, per chapter
-		When I visit "/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain&mode=whole"
+		When I visit "/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":1,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":4,
@@ -291,14 +225,14 @@ Feature: Bible API
 		"""
 
 	Scenario: Regular search mode, per chapter
-		When I visit "/api/v1/bible/books/Genesis/chapters/4/search?q=Eve+Cain"
+		When I visit "/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain"
 		Then the http response status code should be 200
 		Then the content_type should be json
 		And the JSON should be:
 		"""
 		{
 		"total_count":4,
-		"results":[
+		"verses":[
 		{
 		"bookname":"Genesis",
 		"chapter":4,
@@ -327,46 +261,46 @@ Feature: Bible API
 		"""
 
 	Scenario: Large result sets should return 10 results by default for global searches
-		When I visit "/api/v1/bible/search?q=God"
+		When I visit "/api/v1/bible/verses?q=God"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 10 entries
+		And the JSON at "verses" should have 10 entries
 
 	Scenario: Large result sets should return 10 results by default for book scoped searches
-		When I visit "/api/v1/bible/books/Genesis/search?q=God"
+		When I visit "/api/v1/bible/books/Genesis/verses?q=God"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 10 entries
+		And the JSON at "verses" should have 10 entries
 
 	Scenario: Large result sets should return 10 results by default for chapter scoped searches
-		When I visit "/api/v1/bible/books/Genesis/chapters/1/search?q=God"
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?q=God"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 10 entries
+		And the JSON at "verses" should have 10 entries
 
 	Scenario: Specify result size for global searches
-		When I visit "/api/v1/bible/search?q=God&num=4"
+		When I visit "/api/v1/bible/verses?q=God&num=4"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 4 entries
+		And the JSON at "verses" should have 4 entries
 
 	Scenario: Specify result size for book scoped searches
-		When I visit "/api/v1/bible/books/Genesis/search?q=God&num=4"
+		When I visit "/api/v1/bible/books/Genesis/verses?q=God&num=4"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 4 entries
+		And the JSON at "verses" should have 4 entries
 
 	Scenario: Specify result size for chapter scoped searches
-		When I visit "/api/v1/bible/books/Genesis/chapters/1/search?q=God&num=4"
+		When I visit "/api/v1/bible/books/Genesis/chapters/1/verses?q=God&num=4"
 		Then the http response status code should be 200
 		Then the content_type should be json
-		And the JSON at "results" should have 4 entries
+		And the JSON at "verses" should have 4 entries
 
 	Scenario: Specify page for global searches
-		When I visit "/api/v1/bible/search?q=God&page=2"
+		When I visit "/api/v1/bible/verses?q=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-	    And the JSON at "results/0" should be:
+	    And the JSON at "verses/0" should be:
 	    """
 	    {
 	    "bookname":"Genesis",
@@ -377,10 +311,10 @@ Feature: Bible API
 	    """
 
 	Scenario: Specify page for book scoped searches
-		When I visit "/api/v1/bible/books/Mark/search?q=God&page=2"
+		When I visit "/api/v1/bible/books/Mark/verses?q=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-	    And the JSON at "results/0" should be:
+	    And the JSON at "verses/0" should be:
 	    """
 	    {
 	    "bookname":"Mark",
@@ -391,10 +325,10 @@ Feature: Bible API
 	    """
 
 	Scenario: Specify page for chapter scoped searches
-		When I visit "/api/v1/bible/books/Genesis/chapters/2/search?q=God&page=2"
+		When I visit "/api/v1/bible/books/Genesis/chapters/2/verses?q=God&page=2"
 		Then the http response status code should be 200
 		Then the content_type should be json
-	    And the JSON at "results/0" should be:
+	    And the JSON at "verses/0" should be:
 	    """
 	    {
 	    "bookname":"Genesis",
@@ -405,73 +339,73 @@ Feature: Bible API
 	    """
 
 	Scenario: next_page element is not present when remaining global search results are less than a page
-		When I visit "/api/v1/bible/search?q=Jesus&page=89"
+		When I visit "/api/v1/bible/verses?q=Jesus&page=89"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when remaining global search results exceed a page
-		When I visit "/api/v1/bible/search?q=Jesus"
+		When I visit "/api/v1/bible/verses?q=Jesus"
 		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for global search results
-		When I visit "/api/v1/bible/search?q=Jesus&page=3"
-		Then the JSON at "next_page" should include "/api/v1/bible/search?q=Jesus&page=4"
+		When I visit "/api/v1/bible/verses?q=Jesus&page=3"
+		Then the JSON at "next_page" should include "/api/v1/bible/verses?q=Jesus&page=4"
 
 	Scenario: next_page element is not present when remaining book scoped search results are less than a page
-		When I visit "/api/v1/bible/books/Daniel/search?q=Ulai"
+		When I visit "/api/v1/bible/books/Daniel/verses?q=Ulai"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when remaining book scoped search results exceed a page
-		When I visit "/api/v1/bible/books/Matthew/search?q=Jesus"
+		When I visit "/api/v1/bible/books/Matthew/verses?q=Jesus"
 		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for book scoped search results
-		When I visit "/api/v1/bible/books/Matthew/search?q=Jesus&page=3"
-		Then the JSON at "next_page" should include "/api/v1/bible/books/Matthew/search?q=Jesus&page=4"
+		When I visit "/api/v1/bible/books/Matthew/verses?q=Jesus&page=3"
+		Then the JSON at "next_page" should include "/api/v1/bible/books/Matthew/verses?q=Jesus&page=4"
 
 	Scenario: next_page element is not present when remaining chapter scoped search results are less than a page
-		When I visit "/api/v1/bible/books/Daniel/chapters/1/search?q=Ulai"
+		When I visit "/api/v1/bible/books/Daniel/chapters/1/verses?q=Ulai"
 		Then the JSON should not have "next_page"
 
 	Scenario: next_page element is present when remaining chapter scoped search results exceed a page
-		When I visit "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus"
+		When I visit "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus"
 		Then the JSON should have "next_page"
 
 	Scenario: next_page element references the next page for chapter scoped search results
-		When I visit "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus&page=1"
-		Then the JSON at "next_page" should include "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus&page=1"
+		Then the JSON at "next_page" should include "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus&page=2"
 
 	Scenario: previous_page element is not present when global search results are on the first page
-		When I visit "/api/v1/bible/search?q=Jesus"
+		When I visit "/api/v1/bible/verses?q=Jesus"
 		Then the JSON should not have "previous_page"
 
 	Scenario: previous_page element is present when global search results are on a page greater than 1 
-		When I visit "/api/v1/bible/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/verses?q=Jesus&page=2"
 		Then the JSON should have "previous_page"
 
 	Scenario: previous_page element references the previous page for global search results
-		When I visit "/api/v1/bible/search?q=Jesus&page=3"
-		Then the JSON at "previous_page" should include "/api/v1/bible/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/verses?q=Jesus&page=3"
+		Then the JSON at "previous_page" should include "/api/v1/bible/verses?q=Jesus&page=2"
 
 	Scenario: previous_page element is not present when book scoped search results are on the first page
-		When I visit "/api/v1/bible/books/Daniel/search?q=Ulai"
+		When I visit "/api/v1/bible/books/Daniel/verses?q=Ulai"
 		Then the JSON should not have "previous_page"
 
 	Scenario: previous_page element is present when remaining book scoped search results are on a page greater than 1 
-		When I visit "/api/v1/bible/books/Matthew/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/books/Matthew/verses?q=Jesus&page=2"
 		Then the JSON should have "previous_page"
 
 	Scenario: previous_page element references the previous page for book scoped search results
-		When I visit "/api/v1/bible/books/Matthew/search?q=Jesus&page=3"
-		Then the JSON at "previous_page" should include "/api/v1/bible/books/Matthew/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/books/Matthew/verses?q=Jesus&page=3"
+		Then the JSON at "previous_page" should include "/api/v1/bible/books/Matthew/verses?q=Jesus&page=2"
 
 	Scenario: previous_page element is not present when chapter scoped search results are on the first page 
-		When I visit "/api/v1/bible/books/Daniel/chapters/1/search?q=Ulai"
+		When I visit "/api/v1/bible/books/Daniel/chapters/1/verses?q=Ulai"
 		Then the JSON should not have "previous_page"
 
 	Scenario: previous_page element is present when chapter scoped search results are on a page greater than 1 
-		When I visit "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus&page=2"
+		When I visit "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus&page=2"
 		Then the JSON should have "previous_page"
 
 	Scenario: previous_page element references the previous page for chapter scoped search results
-		When I visit "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus&page=2"
-		Then the JSON at "previous_page" should include "/api/v1/bible/books/Matthew/chapters/9/search?q=Jesus&page=1"
+		When I visit "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus&page=2"
+		Then the JSON at "previous_page" should include "/api/v1/bible/books/Matthew/chapters/9/verses?q=Jesus&page=1"

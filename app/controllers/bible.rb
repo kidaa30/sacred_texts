@@ -8,10 +8,13 @@ class App < Sinatra::Base
   get %r{/api/v1/bible/verses} do
     content_type :json
 
-    result = Bible.paginate({
-       :per_page => @num,
-       :page => @page,
-    })
+    if !@search.nil?
+      result = Bible.by_keyword_search(nil, nil, @search, @mode, @num, @page)
+      total_count = result.count
+    else
+      result = Bible.paginate({:per_page => @num, :page => @page})
+      total_count = 31103
+    end
 
     if result.empty?
       status 404
@@ -20,17 +23,22 @@ class App < Sinatra::Base
       data =
         {
           "verses" => result.to_a,
-          "total_count" => 31103
+          "total_count" => total_count
         }
       add_paging!(data)
     end
     data.to_json
   end
 
-  # GET bible/books/verses
+  # GET bible/books/{book}/verses
   get %r{/api/v1/bible/books/([\w]+)/verses} do |book|
     content_type :json
-    result = Bible.by_bookname(book.capitalize, @num, @page)
+
+    if !@search.nil?
+      result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
+    else
+      result = Bible.by_bookname(book.capitalize, @num, @page)
+    end
 
     if result.empty?
       status 404
@@ -46,25 +54,30 @@ class App < Sinatra::Base
     data.to_json
   end
 
-  # GET bible/books/chapters/{x}/verses/{y}
-  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)(\.[\w]+)?} do |book, chapter, verse, type|
-
+  # GET bible/books/{book}/chapters/{chapter}/verses/{verse}
+  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)} do |book, chapter, verse|
+    content_type :json
     result = Bible.find_by_bookname_and_chapter_and_verse(book.capitalize,
                                                           chapter.to_i,
                                                           verse.to_i)
 
     if result.nil?
       status 404
-      format({"error" => "No results found."}, type)
+      {"error" => "No results found."}.to_json
     else
-      format(result, type)
+      result.to_json 
     end
   end
 
-  # GET bible/books/chapters/{x}/verses
+  # GET bible/books/{book}/chapters/{chapter}/verses
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses} do |book, chapter|
     content_type :json
-    result = Bible.by_bookname_and_chapter(book.capitalize, chapter.to_i, @num, @page)
+
+    if !@search.nil?
+      result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
+    else
+      result = Bible.by_bookname_and_chapter(book.capitalize, chapter.to_i, @num, @page)
+    end
 
     if result.empty?
       status 404
@@ -80,74 +93,4 @@ class App < Sinatra::Base
     data.to_json
   end
 
-  # Base url for complete search, passage lookup
-  get '/api/v1/bible/search' do
-    passage = params['passage']
-    type = params['type']
-
-    # cannot be both a passage and a search
-    if (!passage.nil? && !@search.nil?)
-      status 400
-      data = 
-        {
-          "error" => "Only one of the parameters 'passage' and 'search' can be specified."
-        }
-    elsif !@search.nil?
-      result = Bible.by_keyword_search(nil, nil, @search, @mode, @num, @page)
-      data =
-        {
-          "results" => result.to_a,
-          "total_count" => result.count
-        }
-      add_paging!(data)
-    elsif !passage.nil?
-      data = {"passage" => "todo"}
-    else
-      data =
-        {
-          "error" => "This resource is only available for searching via the search url parameter."
-        }
-    end
-    format(data, type)
-  end
-
-  # bible search, per chapter
-  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/search} do |book, chapter|
-    content_type :json
-
-    if !@search.nil?
-      result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
-      data =
-        {
-          "results" => result.to_a,
-          "total_count" => result.count
-        }
-      add_paging!(data)
-      data.to_json
-    else
-      {
-        "error" => "This resource is only available for searching via the search url parameter."
-      }.to_json
-    end
-  end
-
-  # bible search, per book
-  get %r{/api/v1/bible/books/([\w]+)/search} do |book|
-    content_type :json
-
-    if !@search.nil?
-      result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
-      data =
-        {
-          "results" => result.to_a,
-          "total_count" => result.count
-        }
-      add_paging!(data)
-      data.to_json
-    else
-      {
-        "error" => "This resource is only available for searching via the search url parameter."
-      }.to_json
-    end
-  end
 end
