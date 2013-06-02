@@ -58,7 +58,7 @@ html
           td The specified verse for the specified chapter of the
               specified book.
 
-      h4 Example
+      h4 Examples
       pre
         a href="/api/v1/bible/books/Genesis/chapters/1/verses/1" &#47;bible/books/Genesis/chapters/1/verses/1
 
@@ -70,6 +70,35 @@ html
           "chapter" : 1,
           "verse" : 1,
           "text" : "In the beginning, God created the heavens and the earth."
+        }
+        </pre>
+
+      pre
+        a href="/api/v1/bible/books/Genesis/chapters/1/verses" &#47;bible/books/Genesis/chapters/1/verses
+
+      p <pre>
+        200 OK
+
+        {
+          "book" : "Genesis",
+          "chapter" : 1,
+          "verses" : [
+            {
+              "bookname" : "Genesis",
+              "chapter" : 1,
+              "verse" : 1,
+              "text" : "In the beginning, God created the heavens and the earth."
+            },
+            ...
+            {
+              "bookname" : "Genesis",
+              "chapter" : 1,
+              "verse" : 10,
+              "text" : "In the beginning, God created the heavens and the earth."
+            }
+          ],
+          "total_count" : 31,
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/chapters/1/verses?page=2"
         }
         </pre>
 
@@ -102,10 +131,17 @@ html
         {
           "books" :
           [
-            "Genesis" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis",
+            {
+              "bookname" : "Genesis",
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis"
+            },
             ...
-            "2 Samuel" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
+            {
+              "bookname" : "2 Samuel",
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
+            }
           ],
+          "total_count" : 66,
           "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books?page=2"
         }
         </pre>
@@ -120,14 +156,42 @@ html
           "bookname" : "Genesis",
           "chapters" :
           [
-            1 : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/1/verses",
+            {
+              "chapter" : 1,
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/1/verses"
+            },
             ...
-            10 : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/10/verses"
+            {
+              "chapter" : 10,
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/10/verses"
+            }
           ],
+          "total_count" : 50,
           "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis?page=2"
         }
         </pre>
       
+      hr class="bs-docs-separator"
+      h3 Chapters
+
+      p A chapter stands between books and verses. The use cases of viewing a
+        chapter (i.e. reading a chapter) and of viewing all chapters of a book
+        were already covered under the Book resource.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;bible/books/{bookname}/chapters/{chapter}
+          td GET
+          td Redirects to /bible/books/{bookname}/chapters/{chapter}/verses
+        tr
+          td &#47;bible/books/{bookname}/chapters
+          td GET
+          td Redirects to /bible/books/{bookname}
+
       h2 Searching
 
       p Verse collections are available for keyword searches, scoped at each

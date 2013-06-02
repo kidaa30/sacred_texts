@@ -4,6 +4,8 @@ class App < Sinatra::Base
     slim :bible
   end
 
+  # Verses
+
   # GET bible/verses
   get %r{/api/v1/bible/verses} do
     content_type :json
@@ -90,6 +92,58 @@ class App < Sinatra::Base
         }
       add_paging!(data)
     end
+    data.to_json
+  end
+
+  # Chapters
+
+  # GET bible/books/{bookname}/chapters/{chapter}
+  get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)} do |book, chapter|
+    redirect to("/api/v1/bible/books/#{book}/chapters/#{chapter}/verses")
+  end
+
+  # Books
+
+  # GET bible/books
+  get '/api/v1/bible/books' do
+    content_type :json
+
+    result = Bible.books(@num, @page)
+    result.each do |book|
+      book["link"] = request.base_url + "/api/v1/bible/books/" + book["bookname"]
+    end
+
+    data =
+      {
+        "books" => result,
+        "total_count" => Bible::CHAPTERS_PER_BOOK.size
+      }
+    add_paging!(data)
+    data.to_json
+  end
+
+  # GET bible/books/{bookname}
+  get %r{/api/v1/bible/books/([\w]+)} do |book|
+    content_type :json
+
+    result = Bible.chapters_for_book(book, @num, @page)
+    result.each do |chapter|
+      chapter["link"] = request.base_url + "/api/v1/bible/books/#{book}/chapters/" + chapter["chapter"].to_s
+    end
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "bookname" => book,
+          "chapters" => result,
+          "total_count" => Bible::CHAPTERS_PER_BOOK[book]
+        }
+      add_paging!(data)
+    end
+
     data.to_json
   end
 

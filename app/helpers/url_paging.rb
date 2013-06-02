@@ -31,15 +31,14 @@ module Sinatra
     def update_page(new_page)
       url = request.base_url + request.fullpath
 
-      if url.include? "page"
+      #if url.include? "page"
+      if !params['page'].nil?
         url.gsub!(/page=\d+/, "page=#{new_page}")
       else
-        # Special handling if there are no url parameters.
-        # In that case, params will always have 2 keys: splat, captures.
-        if params.size == 2
-          url += "?page=#{new_page}"
-        else
+        if url.include? "?"
           url += "&page=#{new_page}"
+        else
+          url += "?page=#{new_page}"
         end
       end
 
