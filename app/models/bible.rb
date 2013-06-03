@@ -85,8 +85,9 @@ class Bible
   def self.books(limit, page)
     result = Array.new
     books = CHAPTERS_PER_BOOK.keys
+    book_count = CHAPTERS_PER_BOOK.size
 
-    books[(limit * (page - 1))..((limit * page) - 1)].each do |bookname|
+    books[[(limit * (page - 1)), book_count - limit].min .. [((limit * page) - 1), book_count].min].each do |bookname|
       result.push({"bookname" => bookname})
     end
 

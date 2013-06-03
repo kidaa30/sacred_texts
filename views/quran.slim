@@ -26,9 +26,9 @@ html
         </pre>
         refers to the 151st Aya of the 7th Sura.
 
-      h2 Ayat
+      h2 Resources
 
-      h3 Resources
+      h3 Ayat
 
       table class="table table-bordered"
         tr
@@ -36,7 +36,11 @@ html
           th Method
           th Notes
         tr
-          td &#47;quran/suwar/{sura_number}/ayat/
+          td &#47;quran/ayat
+          td GET
+          td The collection of all Ayat in the Quran
+        tr
+          td &#47;quran/suwar/{sura_number}/ayat
           td GET
           td The collection of all Ayat for the specified Sura. 
         tr
@@ -44,7 +48,7 @@ html
           td GET
           td The specified Aya of the specified Sura. 
 
-      h3 Example
+      h4 Example
       pre
         a href="/api/v1/quran/suwar/1/ayat/1" &#47;quran/suwar/1/ayat/1
 
@@ -58,13 +62,52 @@ html
         }
         </pre>
 
+      h3 Suwar
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;quran/suwar
+          td GET
+          td The collection of all Suwar in the Quran
+        tr
+          td &#47;quran/suwar/{sura_number}
+          td GET
+          td Redirects to /quran/suwar/{sura_id}/ayat
+
+      h4 Examples
+
+      pre
+        a href="/api/v1/quran/suwar" &#47;quran/suwar
+
+      p <pre>
+        200 OK
+
+        {
+          "suwar" : [
+            {
+              "sura" : 1,
+              "link" : "http://sacredtexts.heroku.com/api/v1/quran/suwar/1"
+            },
+            ...
+            {
+              "sura" : 10,
+              "link" : "http://sacredtexts.heroku.com/api/v1/quran/suwar/10"
+            }
+          ],
+          "total_count" : 114,
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/quran/suwar?page=2"
+        }
+      </pre>
+
       hr class="bs-docs-separator"
 
       h2 Searching
 
-      h3 Resources
-
-      p The following resources are available for searching.
+      p Ayat are available for scoped searching.
 
       table class="table table-bordered"
         tr
@@ -106,13 +149,12 @@ html
               is 1.
 
       h3 Examples
-
       pre
-        a href="/api/v1/quran/suwar/1/search?q=Allah" &#47;api/v1/quran/suwar/1/search?q=Allah
+        a href="/api/v1/quran/suwar/1/ayat?q=Allah" &#47;api/v1/quran/suwar/1/ayat?q=Allah
       pre
-        a href="/api/v1/quran/suwar/1/search?q=Allah+Lord" &#47;api/v1/quran/suwar/1/search?q=Allah+Lord
+        a href="/api/v1/quran/suwar/1/ayat?q=Allah+Lord" &#47;api/v1/quran/suwar/1/ayat?q=Allah+Lord
       pre
-        a href="/api/v1/quran/search?q=Adam" &#47;api/v1/quran/search?q=Adam
+        a href="/api/v1/quran/ayat?q=Adam" &#47;api/v1/quran/ayat?q=Adam
 
       p The JSON object returned from a search request consists of the following
         elements:
@@ -122,7 +164,7 @@ html
           th Element
           th Notes
         tr
-          td results
+          td ayat
           td A JSON array containing the search results.  The size of the array
               is determined by the query parameter <code>num</code>.
         tr
@@ -142,7 +184,7 @@ html
         200 OK
 
         {
-          "results":
+          "ayat":
           [
             {
               "aya":258,
@@ -157,8 +199,8 @@ html
             }
           ],
           "total_count": 71,
-          "next_page":"http://localhost:9393/api/v1/quran/search?q=abraham&page=3",
-          "previous_page":"http://localhost:9393/api/v1/quran/search?q=abraham&page=1"
+          "next_page":"http://localhost:9393/api/v1/quran/ayat?q=abraham&page=3",
+          "previous_page":"http://localhost:9393/api/v1/quran/ayat?q=abraham&page=1"
         }
         </pre>
         

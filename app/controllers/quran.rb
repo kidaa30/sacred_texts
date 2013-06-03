@@ -4,6 +4,29 @@ class App < Sinatra::Base
     slim :quran
   end
 
+  # Aya
+
+  # get /quran/ayat
+  get "/api/v1/quran/ayat" do
+    content_type :json
+
+    result = Quran.paginate({:per_page => @num, :page => @page})
+    total_count = Quran::AYAT_COUNT
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data = 
+        {
+          "ayat" => result.to_a,
+          "total_count" => total_count
+        }
+      add_paging!(data)
+    end
+    data.to_json
+  end
+
   # GET /quran/suwar/{x}/ayat/{y}
   get %r{/api/v1/quran/suwar/([\d]+)/ayat/([\d]+)} do |sura, aya|
     content_type :json
@@ -38,19 +61,36 @@ class App < Sinatra::Base
     data.to_json
   end
 
+  # Sura
+
+  # /quran/suwar
+  get "/api/v1/quran/suwar" do
+    content_type :json
+
+    result = Quran.suwar(@num, @page)
+    result.each do |sura|
+      sura["link"] = request.base_url + "/api/v1/quran/suwar/" + sura["sura"].to_s
+    end
+
+    data = 
+      {
+        "suwar" => result,
+        "total_count" => Quran::SUWAR_COUNT
+      }
+    add_paging!(data)
+    data.to_json
+  end
+
+  # /quran/suwar/{suwar_id}
+  get %r{/api/v1/quran/suwar/([\d]+)} do |sura|
+    redirect to("/api/v1/quran/suwar/#{sura}/ayat")
+  end
+
   # Base url for complete search, passage lookup
   get '/api/v1/quran/search' do
-    passage = params['passage']
     type = params['type']
 
-    # cannot be both a passage and a search
-    if (!passage.nil? && !@search.nil?)
-      status 400
-      data = 
-        {
-          "error" => "Only one of the parameters 'passage' and 'search' can be specified."
-        }
-    elsif !@search.nil?
+    if !@search.nil?
       result = Quran.by_keyword_search(nil, @search, @mode, @num, @page)
       data =
         {
