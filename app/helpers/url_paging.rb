@@ -9,24 +9,16 @@ module Sinatra
     def add_paging!(data)
       # next page link
       if (data["total_count"] > @num * @page)
-        data["next_page"] = next_page_url
+        data["next_page"] = update_page(@page + 1)
       end
 
-      # previous page link
+      # If page is greater than 1 and not out of bounds, provide link to previous page.
       if (@page > 1)
-        data["previous_page"] = previous_page_url
+        data["previous_page"] = update_page(@page - 1)
       end
     end
 
     private
-
-    def next_page_url
-      update_page(@page + 1)
-    end
-
-    def previous_page_url
-      update_page(@page - 1)
-    end
 
     def update_page(new_page)
       url = request.base_url + request.fullpath
