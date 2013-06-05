@@ -10,8 +10,13 @@ class App < Sinatra::Base
   get "/api/v1/quran/ayat" do
     content_type :json
 
-    result = Quran.paginate({:per_page => @num, :page => @page})
-    total_count = Quran::AYAT_COUNT
+    if @search.nil?
+      result = Quran.paginate({:per_page => @num, :page => @page})
+      total_count = Quran::AYAT_COUNT
+    else
+      result = Quran.by_keyword_search(nil, @search, @mode, @num, @page)
+      total_count = result.size
+    end
 
     if result.empty?
       status 404
@@ -45,7 +50,11 @@ class App < Sinatra::Base
   get %r{/api/v1/quran/suwar/([\d]+)/ayat} do |sura|
     content_type :json
 
-    result = Quran.by_sura(sura.to_i, @num, @page)
+    if @search.nil?
+      result = Quran.by_sura(sura.to_i, @num, @page)
+    else
+      result = Quran.by_keyword_search(sura, @search, @mode, @num, @page)
+    end
 
     if result.empty?
       status 404
@@ -86,46 +95,4 @@ class App < Sinatra::Base
     redirect to("/api/v1/quran/suwar/#{sura}/ayat")
   end
 
-  # Base url for complete search, passage lookup
-  get '/api/v1/quran/search' do
-    type = params['type']
-
-    if !@search.nil?
-      result = Quran.by_keyword_search(nil, @search, @mode, @num, @page)
-      data =
-        {
-          "results" => result.to_a,
-          "total_count" => result.count
-        }
-      add_paging!(data)
-    elsif !passage.nil?
-      data = {"passage" => "todo"}
-    else
-      data =
-        {
-          "error" => "This resource is only available for searching via the search url parameter."
-        }
-    end
-    format(data, type)
-  end
-
-  # search, per sura
-  get %r{/api/v1/quran/suwar/([\w]+)/search} do |sura|
-    content_type :json
-
-    if !@search.nil?
-      result = Quran.by_keyword_search(sura, @search, @mode, @num, @page)
-      data =
-        {
-          "results" => result.to_a,
-          "total_count" => result.count
-        }
-      add_paging!(data)
-      data.to_json
-    else
-      {
-        "error" => "This resource is only available for searching via the search url parameter."
-      }.to_json
-    end
-  end
 end

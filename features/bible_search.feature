@@ -1,4 +1,4 @@
-Feature: Bible API
+Feature: Bible search
 
 	Scenario: full search, single keyword, multiple results
 		When I visit "/api/v1/bible/verses?q=Ulai"
