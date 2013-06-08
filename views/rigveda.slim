@@ -1,0 +1,288 @@
+doctype html
+html
+  head
+    title Sacred Text
+    == bootstrap_assets
+
+  body style="padding-top: 60px;"
+    == slim :navbar
+
+    .container
+      .page-header
+        h1 Rigveda API
+
+      p This site uses the American Standard Version of 1901.
+
+      p The text of the Bible is divided into books, chapters, and verses.  An
+        individual verse of the Bible is refereced using all three.  For example:
+        <pre>
+        Genesis 4:1
+        </pre>
+        refers to the 1st verse in the 4th chapter of the book of Genesis.
+
+      h2 Resources
+
+      h3 Rcas
+
+      p An rc exists at four levels: as a collection belonging to the Rigveda as a
+        whole, as a subcollection belonging to a mandala of the Rigveda, as a
+        subcollection belonging to a sukta of a mandala of the Rigveda, and individually, completely
+        referenced by mandala, sukta, and rc number.
+      p This was done to fit the separate use cases of reading the entire
+        Rigveda, reading a mandala of the Rigveda, reading a sukta of a Rigveda of the
+        Rigveda, and reading an individual rc.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;rigveda/rcas
+          td GET
+          td The collection of all rcas 
+        tr
+          td &#47;rigveda/mandalas/{mandala_id}/rcas
+          td GET
+          td The collection of all rcas for the specified mandala 
+        tr
+          td &#47;rigveda/mandalas/{mandala_id}/suktas/{sukta_id}/rcas
+          td GET
+          td The collection of all rcas for the specified sukta of the
+              specified mandala.
+        tr
+          td &#47;rigveda/mandalas/{mandala_id}/suktas/{sukta_id}/rcas/{rc_id}
+          td GET
+          td The specified rc for the specified sukta of the
+              specified mandala.
+
+      h4 Examples
+      pre
+        a href="/api/v1/rigveda/mandalas/1/suktas/1/rcas/1" &#47;rigveda/mandalas/1/suktas/1/rcas/1
+
+      p <pre>
+        200 OK
+
+        {
+          "mandala":1,
+          "rc":1,
+          "sukta":1,
+          "text":"I Laud Agni, the chosen Priest, God, minister of sacrifice, The hotar, lavishest of wealth."
+        }
+        </pre>
+
+      pre
+        a href="/api/v1/bible/books/Genesis/chapters/1/verses" &#47;bible/books/Genesis/chapters/1/verses
+
+      p <pre>
+        200 OK
+
+        {
+          "book" : "Genesis",
+          "chapter" : 1,
+          "verses" : [
+            {
+              "bookname" : "Genesis",
+              "chapter" : 1,
+              "verse" : 1,
+              "text" : "In the beginning, God created the heavens and the earth."
+            },
+            ...
+            {
+              "bookname" : "Genesis",
+              "chapter" : 1,
+              "verse" : 10,
+              "text" : "In the beginning, God created the heavens and the earth."
+            }
+          ],
+          "total_count" : 31,
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/chapters/1/verses?page=2"
+        }
+        </pre>
+
+      hr class="bs-docs-separator"
+
+      h3 Books
+      p Books are only defined by their title and content.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;bible/books
+          td GET
+          td The collection of all books
+        tr
+          td &#47;bible/books/{bookname}
+          td GET
+          td A single book
+  
+      h4 Example
+      pre
+        a href="/api/v1/bible/books" &#47;bible/books
+
+      p <pre>
+        200 OK
+
+        {
+          "books" :
+          [
+            {
+              "bookname" : "Genesis",
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis"
+            },
+            ...
+            {
+              "bookname" : "2 Samuel",
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
+            }
+          ],
+          "total_count" : 66,
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books?page=2"
+        }
+        </pre>
+
+      pre
+        a href="/api/v1/bible/books/Genesis" &#47;bible/books/Genesis
+
+      p <pre>
+        200 OK
+
+        {
+          "bookname" : "Genesis",
+          "chapters" :
+          [
+            {
+              "chapter" : 1,
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/1/verses"
+            },
+            ...
+            {
+              "chapter" : 10,
+              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/10/verses"
+            }
+          ],
+          "total_count" : 50,
+          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis?page=2"
+        }
+        </pre>
+      
+      hr class="bs-docs-separator"
+      h3 Chapters
+
+      p A chapter stands between books and verses. The use cases of viewing a
+        chapter (i.e. reading a chapter) and of viewing all chapters of a book
+        were already covered under the Book resource.
+
+      table class="table table-bordered"
+        tr
+          th URI
+          th Method
+          th Notes
+        tr
+          td &#47;bible/books/{bookname}/chapters/{chapter}
+          td GET
+          td Redirects to /bible/books/{bookname}/chapters/{chapter}/verses
+        tr
+          td &#47;bible/books/{bookname}/chapters
+          td GET
+          td Redirects to /bible/books/{bookname}
+
+      h2 Searching
+
+      p Verse collections are available for keyword searches, scoped at each
+        aggregate level.
+
+      h3 Query parameters
+      p Searches take the following parameters.
+
+      table class="table table-bordered"
+        tr
+          th Query Parameter
+          th Notes
+        tr
+          td q
+          td A string to specify search keywords.  Multiple keywords must be
+              separated by a "+".  This parameter is mandatory.
+        tr
+          td mode
+          td Specify that you want the search to return results where only whole
+              words match to the specified keywords by setting this parameter to
+              <code>whole</code>.  This search mode is disabled by default.
+        tr
+          td num
+          td An integer specifying the number of results returned.  Its default is
+              10.
+        tr
+          td page
+          td An integer specifying the page of the results to display.  Its default
+              is 1.
+
+      h3 Examples
+
+      pre
+        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole
+      pre
+        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain
+      pre
+        a href="/api/v1/bible/verses?q=Adam" &#47;bible/verses?q=Adam
+      pre
+        a href="/api/v1/bible/books/Genesis/verses?q=Adam" &#47;bible/books/Genesis/verses?q=Adam
+      pre
+        a href="/api/v1/bible/books/Genesis/chapters/3/verses?q=Adam" &#47;bible/books/Genesis/chapters/3/verses?q=Adam
+      pre
+        a href="/api/v1/bible/books/Genesis/verses?q=Adam+Eve" &#47;bible/books/Genesis/verses?q=Adam+Eve
+
+      p The JSON object returned from a search request consists of the following
+        elements:
+
+      table class="table table-bordered"
+        tr
+          th Element
+          th Notes
+        tr
+          td verses
+          td A JSON array containing the search results.  The size of the array
+              is determined by the query parameter <code>num</code>.
+        tr
+          td total_count
+          td An integer whose value is the total size of the result set.
+        tr
+          td previous_page
+          td The url of the previous page of results, if any previous results exist
+              before the current page of results.
+        tr
+          td next_page
+          td The url of the next page of results, if any further results exist
+              passed the current page of results.
+
+      p For example:
+        <pre>
+        200 OK
+
+        {
+          "verses":
+          [
+            {
+              "bookname":"Matthew",
+              "chapter":4,
+              "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
+              "verse":7
+            },
+            ...
+            {
+              "bookname":"Matthew",
+              "chapter":8,
+              "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
+              "verse":18
+            }
+          ],
+          "total_count": 883,
+          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=1",
+          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=3"
+        }
+        </pre>
+        
+      hr class="bs-docs-separator"
