@@ -39,7 +39,7 @@ class App < Sinatra::Base
     if !@search.nil?
       result = Bible.by_keyword_search(book, nil, @search, @mode, @num, @page)
     else
-      result = Bible.by_bookname(book.capitalize, @num, @page)
+      result = Bible.by_book(book.capitalize, @num, @page)
     end
 
     if result.empty?
@@ -48,6 +48,7 @@ class App < Sinatra::Base
     else
       data =
         {
+          "book" => book.capitalize,
           "verses" => result.to_a,
           "total_count" => result.count
         }
@@ -59,7 +60,7 @@ class App < Sinatra::Base
   # GET bible/books/{book}/chapters/{chapter}/verses/{verse}
   get %r{/api/v1/bible/books/([\w]+)/chapters/([\d]+)/verses/([\d]+)} do |book, chapter, verse|
     content_type :json
-    result = Bible.find_by_bookname_and_chapter_and_verse(book.capitalize,
+    result = Bible.find_by_book_and_chapter_and_verse(book.capitalize,
                                                           chapter.to_i,
                                                           verse.to_i)
 
@@ -78,7 +79,7 @@ class App < Sinatra::Base
     if !@search.nil?
       result = Bible.by_keyword_search(book, chapter, @search, @mode, @num, @page)
     else
-      result = Bible.by_bookname_and_chapter(book.capitalize, chapter.to_i, @num, @page)
+      result = Bible.by_book_and_chapter(book.capitalize, chapter.to_i, @num, @page)
     end
 
     if result.empty?
@@ -87,6 +88,8 @@ class App < Sinatra::Base
     else
       data =
         {
+          "book" => book.capitalize,
+          "chapter" => chapter.to_i,
           "verses" => result.to_a,
           "total_count" => result.count
         }
@@ -110,7 +113,7 @@ class App < Sinatra::Base
 
     result = Bible.books(@num, @page)
     result.each do |book|
-      book["link"] = request.base_url + "/api/v1/bible/books/" + book["bookname"]
+      book["link"] = request.base_url + "/api/v1/bible/books/" + book["book"]
     end
 
     data =
@@ -137,7 +140,7 @@ class App < Sinatra::Base
     else
       data =
         {
-          "bookname" => book,
+          "book" => book,
           "chapters" => result,
           "total_count" => Bible::CHAPTERS_PER_BOOK[book]
         }

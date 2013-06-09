@@ -10,7 +10,7 @@ Feature: Bible book/chapter/verse resource
 		And the JSON should be:
 		"""
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":1,
 		"verse":1,
 		"text":	"In the beginning God created the heavens and the earth."
@@ -23,7 +23,7 @@ Feature: Bible book/chapter/verse resource
 		And the JSON should be:
 		"""
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":1,
 		"verse":1,
 		"text":	"In the beginning God created the heavens and the earth."

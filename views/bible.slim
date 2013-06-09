@@ -66,7 +66,7 @@ html
         200 OK
 
         {
-          "bookname" : "Genesis",
+          "book" : "Genesis",
           "chapter" : 1,
           "verse" : 1,
           "text" : "In the beginning, God created the heavens and the earth."
@@ -82,21 +82,22 @@ html
         {
           "book" : "Genesis",
           "chapter" : 1,
-          "verses" : [
-            {
-              "bookname" : "Genesis",
-              "chapter" : 1,
-              "verse" : 1,
-              "text" : "In the beginning, God created the heavens and the earth."
-            },
-            ...
-            {
-              "bookname" : "Genesis",
-              "chapter" : 1,
-              "verse" : 10,
-              "text" : "In the beginning, God created the heavens and the earth."
-            }
-          ],
+          "verses" :
+            [
+              {
+                "book" : "Genesis",
+                "chapter" : 1,
+                "verse" : 1,
+                "text" : "In the beginning, God created the heavens and the earth."
+              },
+              ...
+              {
+                "book" : "Genesis",
+                "chapter" : 1,
+                "verse" : 10,
+                "text" : "In the beginning, God created the heavens and the earth."
+              }
+            ],
           "total_count" : 31,
           "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/chapters/1/verses?page=2"
         }
@@ -132,12 +133,12 @@ html
           "books" :
           [
             {
-              "bookname" : "Genesis",
+              "book" : "Genesis",
               "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis"
             },
             ...
             {
-              "bookname" : "2 Samuel",
+              "book" : "2 Samuel",
               "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
             }
           ],
@@ -153,7 +154,7 @@ html
         200 OK
 
         {
-          "bookname" : "Genesis",
+          "book" : "Genesis",
           "chapters" :
           [
             {
@@ -268,14 +269,14 @@ html
           "verses":
           [
             {
-              "bookname":"Matthew",
+              "book":"Matthew",
               "chapter":4,
               "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
               "verse":7
             },
             ...
             {
-              "bookname":"Matthew",
+              "book":"Matthew",
               "chapter":8,
               "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
               "verse":18

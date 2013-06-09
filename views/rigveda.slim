@@ -11,20 +11,25 @@ html
       .page-header
         h1 Rigveda API
 
-      p This site uses the American Standard Version of 1901.
+      p This site uses the Ralph T.H. Griffith English translation of the Rig
+        Veda, scraped from <a
+        href="http://www.sacred-texts.com">sacred-texts.com</a>.
 
-      p The text of the Bible is divided into books, chapters, and verses.  An
-        individual verse of the Bible is refereced using all three.  For example:
+      p The text of the Rigveda is divided into books called Mandalas, hymns
+        called suktas, and stanzas called rcas.  An rc can be further divided into
+        single units of verse called pada, but this site does not do so.
+        An individual rc of the Rigveda is refereced using Mandala, suktam and
+        rc.  For example:
         <pre>
-        Genesis 4:1
+        5.32.8
         </pre>
-        refers to the 1st verse in the 4th chapter of the book of Genesis.
+        refers to the 8th rc of the 32nd sukta of the 5th mandala.
 
       h2 Resources
 
       h3 Rcas
 
-      p An rc exists at four levels: as a collection belonging to the Rigveda as a
+      p The rc resource is accessible at four levels: as a collection belonging to the Rigveda as a
         whole, as a subcollection belonging to a mandala of the Rigveda, as a
         subcollection belonging to a sukta of a mandala of the Rigveda, and individually, completely
         referenced by mandala, sukta, and rc number.
@@ -72,38 +77,39 @@ html
         </pre>
 
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/1/verses" &#47;bible/books/Genesis/chapters/1/verses
+        a href="/api/v1/rigveda/mandalas/1/suktas/3/rcas" &#47;rigveda/mandalas/1/suktas/3/rcas
 
       p <pre>
         200 OK
 
         {
-          "book" : "Genesis",
-          "chapter" : 1,
-          "verses" : [
-            {
-              "bookname" : "Genesis",
-              "chapter" : 1,
-              "verse" : 1,
-              "text" : "In the beginning, God created the heavens and the earth."
-            },
-            ...
-            {
-              "bookname" : "Genesis",
-              "chapter" : 1,
-              "verse" : 10,
-              "text" : "In the beginning, God created the heavens and the earth."
-            }
-          ],
-          "total_count" : 31,
-          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/chapters/1/verses?page=2"
+          "mandalas":1,
+          "suktas":3,
+          "rcas":
+            [
+              {
+                "mandala":1,
+                "rc":1,
+                "sukta":3,
+                "text":"YE Aśvins, rich in treasure, Lords of splendour, having nimble hands, Accept the sacrificial food."
+              },
+              ...
+              {
+                "mandala":1,
+                "rc":10,
+                "sukta":3,
+                "text":"Wealthy in spoil, enriched with hymns, may bright Sarasvatī desire, With eager love, our sacrifice."
+              }
+            ],
+            "total_count":12,
+            "next_page":"http://localhost:9393/api/v1/rigveda/mandalas/1/suktas/3/rcas?page=2"}
         }
         </pre>
 
       hr class="bs-docs-separator"
 
-      h3 Books
-      p Books are only defined by their title and content.
+      h3 Mandalas
+      p Mandalas are only defined by their title and content.
 
       table class="table table-bordered"
         tr
@@ -111,61 +117,32 @@ html
           th Method
           th Notes
         tr
-          td &#47;bible/books
+          td &#47;rigveda/mandalas
           td GET
-          td The collection of all books
+          td The collection of all Mandalas
         tr
-          td &#47;bible/books/{bookname}
+          td &#47;rigveda/mandalas/{mandala_id}
           td GET
-          td A single book
+          td A single mandala
   
       h4 Example
       pre
-        a href="/api/v1/bible/books" &#47;bible/books
+        a href="/api/v1/rigveda/mandalas" &#47;rigveda/mandalas
 
       p <pre>
         200 OK
 
         {
-          "books" :
-          [
-            {
-              "bookname" : "Genesis",
-              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis"
-            },
-            ...
-            {
-              "bookname" : "2 Samuel",
-              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/2%20Samuel"
-            }
-          ],
-          "total_count" : 66,
-          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books?page=2"
         }
         </pre>
 
       pre
-        a href="/api/v1/bible/books/Genesis" &#47;bible/books/Genesis
+        a href="/api/v1/rigveda/mandalas/1" &#47;rigveda/mandalas/1
 
       p <pre>
         200 OK
 
         {
-          "bookname" : "Genesis",
-          "chapters" :
-          [
-            {
-              "chapter" : 1,
-              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/1/verses"
-            },
-            ...
-            {
-              "chapter" : 10,
-              "link" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis/10/verses"
-            }
-          ],
-          "total_count" : 50,
-          "next_page" : "http://sacredtexts.heroku.com/api/v1/bible/books/Genesis?page=2"
         }
         </pre>
       
@@ -263,25 +240,6 @@ html
         200 OK
 
         {
-          "verses":
-          [
-            {
-              "bookname":"Matthew",
-              "chapter":4,
-              "text":"Jesus said unto him, Again it is written, Thou shalt not make trial of the Lord thy God.",
-              "verse":7
-            },
-            ...
-            {
-              "bookname":"Matthew",
-              "chapter":8,
-              "text":"Now when Jesus saw great multitudes about him, he gave commandments to depart unto the other side.",
-              "verse":18
-            }
-          ],
-          "total_count": 883,
-          "previous_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=1",
-          "next_page":"http://sacredtexts.herokuapp.com/api/v1/bible/verses?q=Jesus&page=3"
         }
         </pre>
         

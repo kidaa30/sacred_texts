@@ -10,6 +10,10 @@ class Rigveda
   key :rc, Integer
   key :text, String
 
+  def self.by_mandala_and_sukta(mandala, sukta, limit, page)
+    where(:mandala => mandala, :sukta => sukta).limit(limit).skip(limit * (page - 1))
+  end
+
   def self.by_keyword_search(mandala, sukta, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!mandala.nil?)

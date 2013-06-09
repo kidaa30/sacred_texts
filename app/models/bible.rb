@@ -77,7 +77,7 @@ class Bible
 
   set_collection_name 'Bible'
 
-  key :bookname, String
+  key :book, String
   key :chapter, Integer
   key :verse, Integer
   key :text, String
@@ -87,8 +87,8 @@ class Bible
     books = CHAPTERS_PER_BOOK.keys
     book_count = CHAPTERS_PER_BOOK.size
 
-    books[[(limit * (page - 1)), book_count - limit].min .. [((limit * page) - 1), book_count].min].each do |bookname|
-      result.push({"bookname" => bookname})
+    books[[(limit * (page - 1)), book_count - limit].min .. [((limit * page) - 1), book_count].min].each do |book|
+      result.push({"book" => book})
     end
 
     result
@@ -109,18 +109,18 @@ class Bible
     result
   end
 
-  def self.by_bookname(book, limit, page)
-    where(:bookname => book).limit(limit).skip(limit * (page - 1))
+  def self.by_book(book, limit, page)
+    where(:book => book).limit(limit).skip(limit * (page - 1))
   end
 
-  def self.by_bookname_and_chapter(book, chapter, limit, page)
-    where(:bookname => book, :chapter => chapter).limit(limit).skip(limit * (page - 1))
+  def self.by_book_and_chapter(book, chapter, limit, page)
+    where(:book => book, :chapter => chapter).limit(limit).skip(limit * (page - 1))
   end
 
   def self.by_keyword_search(book, chapter, keywords, mode, limit, page)
     clause = KeywordParser.keyword_where_clause(keywords, mode)
     if (!book.nil?)
-      clause.push({:bookname => book.capitalize})
+      clause.push({:book => book.capitalize})
     end
     if (!chapter.nil?)
       clause.push({:chapter => chapter.to_i})

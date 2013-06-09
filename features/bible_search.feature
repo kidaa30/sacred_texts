@@ -9,13 +9,13 @@ Feature: Bible search
 		"total_count":2,
 		"verses":[
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I saw in the vision; now it was so, that when I saw, I was in Shushan the palace, which is in the province of Elam; and I saw in the vision, and I was by the river Ulai.",
 		"verse":2
 		},
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
 		"verse":16
@@ -33,7 +33,7 @@ Feature: Bible search
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
 		"verse":16
@@ -59,16 +59,18 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
+		"chapter":3,
 		"total_count":2,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":3,
 		"text":"And unto Adam he said, Because thou hast hearkened unto the voice of thy wife, and hast eaten of the tree, of which I commanded thee, saying, Thou shalt not eat of it: cursed is the ground for thy sake; in toil shalt thou eat of it all the days of thy life;",
 		"verse":17
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":3,
 		"text":"And Jehovah God made for Adam and for his wife coats of skins, and clothed them.",
 		"verse":21
@@ -83,10 +85,12 @@ Feature: Bible search
 		Then the JSON should be:
 		"""
 		{
+		"book":"Daniel",
+		"chapter":8,
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
 		"verse":16
@@ -102,10 +106,11 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And Lamech said unto his wives: Adah and Zillah, hear my voice; Ye wives of Lamech, hearken unto my speech: For I have slain a man for wounding me, And a young man for bruising me:",
 		"verse":23
@@ -120,10 +125,11 @@ Feature: Bible search
 		Then the JSON should be:
 		"""
 		{
+		"book":"Daniel",
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
 		"verse":16
@@ -141,7 +147,7 @@ Feature: Bible search
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Daniel",
+		"book":"Daniel",
 		"chapter":8,
 		"text":"And I heard a man`s voice between [the banks of] the Ulai, which called, and said, Gabriel, make this man to understand the vision.",
 		"verse":16
@@ -157,10 +163,11 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
 		"verse":1
@@ -176,28 +183,29 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
 		"total_count":4,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
 		"verse":1
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And Jehovah said unto him, Therefore whosoever slayeth Cain, vengeance shall be taken on him sevenfold. And Jehovah appointed a sign for Cain, lest any finding him should smite him.",
 		"verse":15
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And Zillah, she also bare Tubal-cain, the forger of every cutting instrument of brass and iron: and the sister of Tubal-cain was Naamah.",
 		"verse":22
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"If Cain shall be avenged sevenfold, Truly Lamech seventy and sevenfold.","verse":24
 		}
@@ -212,10 +220,12 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
+		"chapter":4,
 		"total_count":1,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
 		"verse":1
@@ -231,28 +241,30 @@ Feature: Bible search
 		And the JSON should be:
 		"""
 		{
+		"book":"Genesis",
+		"chapter":4,
 		"total_count":4,
 		"verses":[
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with [the help of] Jehovah.",
 		"verse":1
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And Jehovah said unto him, Therefore whosoever slayeth Cain, vengeance shall be taken on him sevenfold. And Jehovah appointed a sign for Cain, lest any finding him should smite him.",
 		"verse":15
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"And Zillah, she also bare Tubal-cain, the forger of every cutting instrument of brass and iron: and the sister of Tubal-cain was Naamah.",
 		"verse":22
 		},
 		{
-		"bookname":"Genesis",
+		"book":"Genesis",
 		"chapter":4,
 		"text":"If Cain shall be avenged sevenfold, Truly Lamech seventy and sevenfold.","verse":24
 		}
@@ -303,7 +315,7 @@ Feature: Bible search
 	    And the JSON at "verses/0" should be:
 	    """
 	    {
-	    "bookname":"Genesis",
+	    "book":"Genesis",
 	    "chapter":1,
 	    "text":"And God said, Let the earth put forth grass, herbs yielding seed, [and] fruit-trees bearing fruit after their kind, wherein is the seed thereof, upon the earth: and it was so.",
 	    "verse":11
@@ -317,7 +329,7 @@ Feature: Bible search
 	    And the JSON at "verses/0" should be:
 	    """
 	    {
-	    "bookname":"Mark",
+	    "book":"Mark",
 	    "chapter":4,
 	    "text":"And he said, So is the kingdom of God, as if a man should cast seed upon the earth;",
 	    "verse":26
@@ -331,7 +343,7 @@ Feature: Bible search
 	    And the JSON at "verses/0" should be:
 	    """
 	    {
-	    "bookname":"Genesis",
+	    "book":"Genesis",
 	    "chapter":2,
 	    "text":"And out of the ground Jehovah God formed every beast of the field, and every bird of the heavens; and brought them unto the man to see what he would call them: and whatsoever the man called every living creature, that was the name thereof.",
 	    "verse":19
