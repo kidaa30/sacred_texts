@@ -4,6 +4,27 @@ class App < Sinatra::Base
     slim :rigveda
   end
 
+  # GET rigveda/rcas
+  get %r{/api/v1/rigveda/rcas} do
+    content_type :json
+
+    result = Rigveda.paginate({:per_page => @num, :page => @page})
+    total_count = 9535
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "rcas" => result.to_a,
+          "total_count" => total_count
+        }
+      add_paging!(data)
+    end
+    data.to_json
+  end
+
   # GET rigveda/mandalas/{mandala}/suktas/{sukta}/rcas/{rc}
   get %r{/api/v1/rigveda/mandalas/([\d]+)/suktas/([\d]+)/rcas/([\d]+)} do |mandala, sukta, rc|
     content_type :json
