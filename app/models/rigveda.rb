@@ -10,6 +10,10 @@ class Rigveda
   key :rc, Integer
   key :text, String
 
+  def self.by_mandala(mandala, limit, page)
+    where(:mandala => mandala).limit(limit).skip(limit * (page - 1))
+  end
+
   def self.by_mandala_and_sukta(mandala, sukta, limit, page)
     where(:mandala => mandala, :sukta => sukta).limit(limit).skip(limit * (page - 1))
   end

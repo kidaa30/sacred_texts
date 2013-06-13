@@ -25,6 +25,26 @@ class App < Sinatra::Base
     data.to_json
   end
 
+  # GET rigveda/mandalas/rcas/rc
+  get %r{/api/v1/rigveda/mandalas/([\d]+)/rcas} do |mandala|
+    content_type :json
+    result = Rigveda.by_mandala(mandala.to_i, @num, @page)
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data =
+        {
+          "mandala" => mandala,
+          "rcas" => result.to_a,
+          "total_count" => result.count
+        }
+      add_paging!(data)
+    end
+    data.to_json
+  end
+
   # GET rigveda/mandalas/{mandala}/suktas/{sukta}/rcas/{rc}
   get %r{/api/v1/rigveda/mandalas/([\d]+)/suktas/([\d]+)/rcas/([\d]+)} do |mandala, sukta, rc|
     content_type :json
