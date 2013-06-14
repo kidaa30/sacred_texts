@@ -80,4 +80,22 @@ class App < Sinatra::Base
     data.to_json
   end
 
+  # GET /rigveda/mandalas
+  get '/api/v1/rigveda/mandalas' do
+    content_type :json
+
+    result = Rigveda.mandalas(@num, @page)
+    result.each do |mandala|
+      mandala["link"] = request.base_url + "/api/v1/rigveda/mandalas/" + mandala["mandala"].to_s
+    end
+
+    data =
+      {
+        "mandalas" => result,
+        "total_count" => Rigveda::SUKTAS_PER_MANDALA.size
+      }
+    add_paging!(data)
+    data.to_json
+  end
+
 end
