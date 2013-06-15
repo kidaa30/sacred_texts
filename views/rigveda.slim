@@ -34,7 +34,7 @@ html
         subcollection belonging to a sukta of a mandala of the Rigveda, and individually, completely
         referenced by mandala, sukta, and rc number.
       p This was done to fit the separate use cases of reading the entire
-        Rigveda, reading a mandala of the Rigveda, reading a sukta of a Rigveda of the
+        Rigveda, reading a mandala of the Rigveda, reading a sukta of a mandala of the
         Rigveda, and reading an individual rc.
 
       table class="table table-bordered"
@@ -133,6 +133,19 @@ html
         200 OK
 
         {
+          "mandalas":
+            [
+              {
+                "mandala":1,
+                "link":"http://localhost:9393/api/v1/rigveda/mandalas/1"
+              },
+              ,,,
+              {
+                "mandala":10,
+                "link":"http://localhost:9393/api/v1/rigveda/mandalas/10"
+              }
+            ],
+          "total_count":10
         }
         </pre>
 
@@ -143,15 +156,30 @@ html
         200 OK
 
         {
+          "mandala":1,
+          "suktas":
+            [
+              {
+                "sukta":1,
+                "link":"http://localhost:9393/api/v1/rigveda/mandalas/1/suktas/1"
+              },
+              ...
+              {
+                "sukta":10,
+                "link":"http://localhost:9393/api/v1/rigveda/mandalas/1/suktas/10"
+              }
+            ],
+          "total_count":191,
+          "next_page":"http://localhost:9393/api/v1/rigveda/mandalas/1?page=2"
         }
         </pre>
       
       hr class="bs-docs-separator"
-      h3 Chapters
+      h3 Suktas
 
-      p A chapter stands between books and verses. The use cases of viewing a
-        chapter (i.e. reading a chapter) and of viewing all chapters of a book
-        were already covered under the Book resource.
+      p A sukta stands between mandalas and rcas. The use cases of viewing a
+        sukta (i.e. reading a sukta) and of viewing all suktas of a mandala
+        were already covered under the mandala resource.
 
       table class="table table-bordered"
         tr
@@ -159,17 +187,17 @@ html
           th Method
           th Notes
         tr
-          td &#47;bible/books/{bookname}/chapters/{chapter}
+          td &#47;rigveda/mandalas/{mandala_id}/suktas/{sukta_id}
           td GET
-          td Redirects to /bible/books/{bookname}/chapters/{chapter}/verses
+          td Redirects to /rigveda/mandalas/{mandala_id}/suktas/{sukta_id}/rcas
         tr
-          td &#47;bible/books/{bookname}/chapters
+          td &#47;rigveda/mandalas/{mandala_id}/suktas
           td GET
-          td Redirects to /bible/books/{bookname}
+          td Redirects to /rigveda/mandalas/{mandala_id}
 
       h2 Searching
 
-      p Verse collections are available for keyword searches, scoped at each
+      p Rc collections are available for keyword searches, scoped at each
         aggregate level.
 
       h3 Query parameters

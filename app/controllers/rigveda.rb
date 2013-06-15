@@ -80,6 +80,20 @@ class App < Sinatra::Base
     data.to_json
   end
 
+  # Suktas
+
+  # GET rigveda/mandala/{mandala_id}/suktas/{sukta_id}
+  get %r{/api/v1/rigveda/mandalas/([\d]+)/suktas/([\d]+)} do |mandala, sukta|
+    redirect to("/api/v1/rigveda/mandalas/#{mandala}/suktas/#{sukta}/rcas")
+  end
+
+  # GET rigveda/mandala/{mandala_id}/suktas
+  get %r{/api/v1/rigveda/mandalas/([\d]+)/suktas} do |mandala|
+    redirect to("/api/v1/rigveda/mandalas/#{mandala}")
+  end
+
+  # Mandalas
+
   # GET /rigveda/mandalas
   get '/api/v1/rigveda/mandalas' do
     content_type :json
@@ -95,6 +109,31 @@ class App < Sinatra::Base
         "total_count" => Rigveda::SUKTAS_PER_MANDALA.size
       }
     add_paging!(data)
+    data.to_json
+  end
+
+  # GET /rigveda/mandalas/{mandala_id}
+  get %r{/api/v1/rigveda/mandalas/([\d]+)} do |mandala|
+    content_type :json
+
+    result = Rigveda.suktas_for_mandala(mandala.to_i, @num, @page)
+    result.each do |sukta|
+      sukta["link"] = request.base_url + "/api/v1/rigveda/mandalas/#{mandala}/suktas/" + sukta["sukta"].to_s
+    end
+
+    if result.empty?
+      status 404
+      data = {"error" => "No results found."}
+    else
+      data = 
+        {
+          "mandala" => mandala.to_i,
+          "suktas" => result,
+          "total_count" => Rigveda::SUKTAS_PER_MANDALA[mandala.to_i]
+        }
+      add_paging!(data)
+    end
+
     data.to_json
   end
 

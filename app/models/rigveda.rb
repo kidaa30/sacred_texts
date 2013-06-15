@@ -38,6 +38,21 @@ class Rigveda
     result
   end
 
+  def self.suktas_for_mandala(mandala, limit, page)
+    result = Array.new
+    count = SUKTAS_PER_MANDALA[mandala]
+
+    if count.nil?
+      return result
+    end
+
+    for i in (1 + limit * (page - 1))..[limit * page, count].min
+      result.push({"sukta" => i})
+    end
+    
+    result
+  end
+
   def self.by_mandala(mandala, limit, page)
     where(:mandala => mandala).limit(limit).skip(limit * (page - 1))
   end
