@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title Sacred Text
+    == bootstrap_assets
+
+  body style="padding-top: 60px;"
+    == slim :navbar
+
+    .container
+      .page-header
+        h1 About 
+
+      h2 Technology
+      p This site was built using
+      ul
+        li Sinatra for the web framework
+        li Slim for front-end page templating
+        li Twitter Bootstrap for the front-end style
+        li MongoDB for the database backend
+        li Mongomapper for the ORM
+        li Cucumber and json_spec for testing
+        li Shotgun as the local development webserver
+        li Heroku provides the PaaS for deploying and running the application
+
+      hr class="bs-docs-separator"
+
+      h2 API Design Decisions
+      p There is a informative 
+        <a href="https://www.youtube.com/watch?v=QpAhXa12xvU">video by apigee on
+        RESTful API design</a>.  I tried to incorporate the ideas presented there
+        into this app:
+
+      ul
+        li Search parameters are hid behind the ? in the URLs
+        li HTTP status code 200 is returned for all successful API calls
+        li The API version is mandatory, accomplished by including it in the URL
+        li API calls that are expected to return a collection have built in
+            pagination.  These calls have a default return result size, and take
+            optional URL parameters to set the page and return result size.
+
+      h3 Future Work
+      p The following improvements could be made:
+
+      ul
+        li Return meaningful error messages for unsuccessful API calls, with
+            HTTP status code 401.
+        li Consistent use of the HTTP status code 404 when resource is not
+            found.  Sometimes the API call returns an empty array instead.
+        li Add support for suppressing non-200 HTTP response codes, even when
+            response is not "ok". For example:
+            <pre>/bible/verses?q=Buddha&suppress_response_codes=true</pre>
+            Then the "real" 404 HTTP response code would be pushed into the response 
+            message.
+        li Add support for other content types.
+        li Add rate limiting for API calls
+        li Use MongoDB's Text Search feature for searching the online texts.  I
+            don't know if this is supported by Mongomapper.

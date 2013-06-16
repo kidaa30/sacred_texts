@@ -8,5 +8,42 @@ html
     == slim :navbar
 
     .container
-      h1 Sacred Texts
-      p Testing
+      .hero-unit
+        h1 Sacred Texts
+        p The Sacred Texts API lets users browse and search English translations
+          of some religous texts.
+
+      .row
+        .span3
+          h2 Rigveda
+          p An ancient Indian sacred collection of Vedic Sanskrit hymns.  It
+            is counted among the four canonical sacred texts of Hinduism
+            known as the Vedas.
+          p
+            a.btn class="btn-info" href="/rigveda" Learn more
+
+        .span3
+          h2 Bible
+          p A canonical collection of texts considered sacred in Judaism or
+            Christianity. Different religious groups include different books
+            within their canons
+          p
+            a.btn class="btn-info" href="/bible" Learn more
+
+        .span3
+          h2 Quran
+          p The central religious text of Islam.  It is widely
+            regarded as the finest piece of literature in the Arabic language.
+          p
+            a.btn class="btn-info" href="/quran" Learn more
+
+        .span3
+          h2 Upcoming
+          p There are many other texts that are good candidates for similar
+            API usage.  They include, but are not limited to:
+          ul
+            li The remaining 3 Vedas
+            li The Poetic Edda
+            li The Book of Mormon
+            li The Vinaya Pitaka
+            li The Kojiki

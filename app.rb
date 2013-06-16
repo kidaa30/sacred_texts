@@ -35,8 +35,12 @@ class App < Sinatra::Base
     slim :index
   end
 
-  get '/apidesign' do
-    slim :apidesign
+  get '/contact' do
+    slim :contact
+  end
+
+  get '/about' do
+    slim :about
   end
 
 end
