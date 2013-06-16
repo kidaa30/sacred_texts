@@ -8,8 +8,13 @@ class App < Sinatra::Base
   get %r{/api/v1/rigveda/rcas} do
     content_type :json
 
-    result = Rigveda.paginate({:per_page => @num, :page => @page})
-    total_count = 9535
+    if !@search.nil?
+      result = Rigveda.by_keyword_search(nil, nil, @search, @mode, @num, @page)
+      total_count = result.count
+    else
+      result = Rigveda.paginate({:per_page => @num, :page => @page})
+      total_count = 9535
+    end
 
     if result.empty?
       status 404
@@ -25,10 +30,15 @@ class App < Sinatra::Base
     data.to_json
   end
 
-  # GET rigveda/mandalas/rcas/rc
+  # GET rigveda/mandalas/{mandala_id}/rcas
   get %r{/api/v1/rigveda/mandalas/([\d]+)/rcas} do |mandala|
     content_type :json
-    result = Rigveda.by_mandala(mandala.to_i, @num, @page)
+
+    if !@search.nil?
+      result = Rigveda.by_keyword_search(mandala.to_i, nil, @search, @mode, @num, @page)
+    else
+      result = Rigveda.by_mandala(mandala.to_i, @num, @page)
+    end
 
     if result.empty?
       status 404
@@ -64,7 +74,11 @@ class App < Sinatra::Base
   get %r{/api/v1/rigveda/mandalas/([\d]+)/suktas/([\d]+)/rcas} do |mandala, sukta|
     content_type :json
 
-    result = Rigveda.by_mandala_and_sukta(mandala.to_i, sukta.to_i, @num, @page)
+    if !@search.nil?
+      result = Rigveda.by_keyword_search(mandala.to_i, sukta.to_i, @search, @mode, @num, @page)
+    else
+      result = Rigveda.by_mandala_and_sukta(mandala.to_i, sukta.to_i, @num, @page)
+    end
 
     if result.empty?
       status 404

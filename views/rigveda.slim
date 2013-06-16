@@ -15,7 +15,7 @@ html
         Veda, scraped from <a
         href="http://www.sacred-texts.com">sacred-texts.com</a>.
 
-      p The text of the Rigveda is divided into books called Mandalas, hymns
+      p The text of the Rigveda is divided into mandalas called Mandalas, hymns
         called suktas, and stanzas called rcas.  An rc can be further divided into
         single units of verse called pada, but this site does not do so.
         An individual rc of the Rigveda is refereced using Mandala, suktam and
@@ -228,17 +228,17 @@ html
       h3 Examples
 
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain&mode=whole
+        a href="/api/v1/rigveda/mandalas/1/suktas/4/rcas?q=Indra+sing&mode=whole" &#47;rigveda/mandalas/1/suktas/4/rcas?q=Indra+sing&mode=whole
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/4/verses?q=Eve+Cain" &#47;bible/books/Genesis/chapters/4/verses?q=Eve+Cain
+        a href="/api/v1/rigveda/mandalas/1/suktas/4/rcas?q=friend" &#47;rigveda/mandalas/1/suktas/4/rcas?q=friend
       pre
-        a href="/api/v1/bible/verses?q=Adam" &#47;bible/verses?q=Adam
+        a href="/api/v1/rigveda/rcas?q=Maghavan" &#47;rigveda/rcas?q=Maghavan
       pre
-        a href="/api/v1/bible/books/Genesis/verses?q=Adam" &#47;bible/books/Genesis/verses?q=Adam
+        a href="/api/v1/rigveda/mandalas/1/rcas?q=Maghavan" &#47;rigveda/mandalas/1/rcas?q=Maghavan
       pre
-        a href="/api/v1/bible/books/Genesis/chapters/3/verses?q=Adam" &#47;bible/books/Genesis/chapters/3/verses?q=Adam
+        a href="/api/v1/rigveda/mandalas/1/suktas/3/rcas?q=maghavan" &#47;rigveda/mandalas/1/suktas/3/rcas?q=maghavan
       pre
-        a href="/api/v1/bible/books/Genesis/verses?q=Adam+Eve" &#47;bible/books/Genesis/verses?q=Adam+Eve
+        a href="/api/v1/rigveda/mandalas/1/rcas?q=maghavan+dragons" &#47;rigveda/mandalas/1/rcas?q=maghavan+dragons
 
       p The JSON object returned from a search request consists of the following
         elements:
@@ -248,7 +248,7 @@ html
           th Element
           th Notes
         tr
-          td verses
+          td rcas
           td A JSON array containing the search results.  The size of the array
               is determined by the query parameter <code>num</code>.
         tr
@@ -268,6 +268,17 @@ html
         200 OK
 
         {
+          "mandala":"1",
+          "rcas":
+            [
+              {
+                "mandala":1,
+                "rc":3,
+                "sukta":32,
+                "text":"Impetuous as a bull, he chose the Soma and in three sacred beakers drank the juices. Maghavan grasped the thunder for his weapon, and smote to death this firstborn of the dragons."
+              }
+            ],
+          "total_count":1
         }
         </pre>
         
